@@ -2,8 +2,8 @@ import { Request, Response } from 'express';
 import CreateTagService from '@modules/tools/services/CreateTagService';
 import DeleteToolService from '@modules/tools/services/DeleteToolService';
 import CreateToolService from '@modules/tools/services/CreateToolService';
-import ListToolsService from '@modules/tools/services/ListToolsService';
-import FilterToolsService from '@modules/tools/services/FilterToolsService';
+import FindAllToolsService from '@modules/tools/services/FindAllToolsService';
+import FilterToolsByTagNameService from '@modules/tools/services/FilterToolsByTagNameService';
 import { container } from 'tsyringe';
 
 export default class ToolsController {
@@ -38,37 +38,25 @@ export default class ToolsController {
   public async show(request: Request, response: Response): Promise<Response> {
     const tagFilter = request.query.tag;
 
-    if (tagFilter) {
-      const filterToolsService = container.resolve(FilterToolsService);
+    if (tagFilter && typeof tagFilter === 'string') {
+      const filterToolsByTagNameService = container
+        .resolve(FilterToolsByTagNameService);
 
-      const tools = await filterToolsService.execute(tagFilter.toString());
+      const tools = await filterToolsByTagNameService.execute(tagFilter);
 
-      console.log(tools);
-
-      return response.status(200).json(tools);
+      return response.status(200).json(tools.map((tool) => {
+        const { tags: createdTags, ...rest } = tool;
+        return { ...rest, tags: createdTags.map((tag) => tag.name) };
+      }));
     }
 
-    const deleteToolService = container.resolve(ListToolsService);
+    const findAllToolsService = container.resolve(FindAllToolsService);
 
-    const tools = await deleteToolService.execute();
+    const tools = await findAllToolsService.execute();
 
     return response.status(200).json(tools.map((tool) => {
       const { tags: createdTags, ...rest } = tool;
       return { ...rest, tags: createdTags.map((tag) => tag.name) };
     }));
-  }
-
-  public async filter(request: Request, response: Response): Promise<Response> {
-    const tagFilter = request.query.tag;
-
-    console.log(tagFilter);
-
-    const filterToolsService = container.resolve(FilterToolsService);
-
-    const tools = await filterToolsService.execute('node');
-
-    console.log(tools);
-
-    return response.status(200).json(tools.map((tool) => tool.tags));
   }
 }

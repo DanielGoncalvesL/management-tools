@@ -13,13 +13,17 @@ toolsRouter.post('/', celebrate({
     title: Joi.string().required(),
     link: Joi.string().required(),
     description: Joi.string().required(),
-    tags: Joi.array().required(),
+    tags: Joi.array().items(Joi.string()).min(1).required(),
   },
 }), toolsController.create);
 
 // toolsRouter.get('/', toolsController.filter);
 
-toolsRouter.get('/', toolsController.show);
+toolsRouter.get('/', celebrate({
+  [Segments.QUERY]: Joi.object().keys({
+    tag: Joi.string(),
+  }),
+}), toolsController.show);
 
 toolsRouter.delete('/:id', celebrate({
   [Segments.PARAMS]: {

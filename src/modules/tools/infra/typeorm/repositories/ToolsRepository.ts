@@ -1,7 +1,8 @@
-import { getRepository, Repository } from 'typeorm';
+import { getRepository, Repository, In } from 'typeorm';
 import IToolsRepository from '@modules/tools/repositories/IToolsRepository';
 import Tool from '@modules/tools/infra/typeorm/entities/Tool';
 import ICreateToolDTO from '@modules/tools/dtos/ICreateToolDTO';
+// import Tag from '@modules/tools/infra/typeorm/entities/Tag';
 
 export default class ToolsRepository implements IToolsRepository {
   private ormRepository: Repository<Tool>;
@@ -38,8 +39,16 @@ export default class ToolsRepository implements IToolsRepository {
     return this.ormRepository.find();
   }
 
-  public async filterTools(tag: string): Promise<Tool[] | undefined> {
-    return this.ormRepository.createQueryBuilder('tools').innerJoinAndMapMany('tools.tags', 'tags', '').where('tags.name = :name', { name: tag }).getMany();
+  public async findToolsByTagName(tag: string): Promise<Tool[] | undefined> {
+    const toolsIds = await this.ormRepository.createQueryBuilder('tools')
+      .leftJoinAndSelect('tools.tags', 'tags')
+      .where('tags.name = :name', { name: tag }).getMany();
+
+    const tools = await this.ormRepository.find({
+      id: In(toolsIds.map((tool) => tool.id)),
+    });
+
+    return tools;
   }
 
   public async remove(tool: Tool): Promise<void> {

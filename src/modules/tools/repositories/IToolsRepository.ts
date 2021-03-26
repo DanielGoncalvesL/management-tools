@@ -3,7 +3,7 @@ import Tool from '@modules/tools/infra/typeorm/entities/Tool';
 
 export default interface IToolsRepository{
   listTools(): Promise<Tool[] | undefined>;
-  filterTools(tag: string): Promise<Tool[] | undefined>;
+  findToolsByTagName(tag: string): Promise<Tool[] | undefined>;
   findById(id: string): Promise<Tool | undefined>;
   findByTitle(title: string): Promise<Tool | undefined>;
   create(data: ICreateToolDTO): Promise<Tool>;

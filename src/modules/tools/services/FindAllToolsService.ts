@@ -4,7 +4,7 @@ import IToolsRepository from '@modules/tools/repositories/IToolsRepository';
 import { injectable, inject } from 'tsyringe';
 
 @injectable()
-export default class ListToolsService {
+export default class FindAllToolsService {
   constructor(
     @inject('ToolsRepository')
     private toolsRepository: IToolsRepository,
