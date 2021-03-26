@@ -1,0 +1,218 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "version": "DEV",
+        "title": "Undefined Documentation",
+        "description": "This is an Api Undefined\n",
+        "contact": {
+            "email": "danielopesgl05@gmail.com"
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "paths": {
+        "/users": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Create a user",
+                "description": "Create a new user",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "name": "User Name",
+                                    "email": "user@user.com",
+                                    "password": "user-password"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "400": {
+                        "description": "Email address already used"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/authenticate": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Authenticate a user",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "email": "user@user.com",
+                                    "password": "123456"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successfully"
+                    },
+                    "401": {
+                        "description": "Incorrect email/password combination"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/password/reset": {
+            "patch": {
+                "security": [{
+                    "BearerAuth": []
+                }],
+                "tags": [
+                    "Password"
+                ],
+                "summary": "Reset user password",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "password_confirm": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "password": "user_password",
+                                    "password_confirmation": "user_password_confirm"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Reset password is success"
+                    },
+                    "400": {
+                        "description": "User not existing | Token expired"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/profile": {
+            "put": {
+                "security": [{
+                    "BearerAuth": []
+                }],
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Update the logged user data",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "name": "user-name",
+                                    "password_confirmation": "user-email"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User profile update is success"
+                    },
+                    "400": {
+                        "description": "User not found | Email already in use"
+                    },
+                    "401": {
+                        "description": "Invalid JWT token"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            },
+            "get": {
+                "security": [{
+                    "BearerAuth": []
+                }],
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Show profile",
+                "responses": {
+                    "200": {
+                        "description": "Show profile is success"
+                    },
+                    "400": {
+                        "description": "User not found"
+                    },
+                    "401": {
+                        "description": "Invalid JWT token"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        }
+    }
+}
