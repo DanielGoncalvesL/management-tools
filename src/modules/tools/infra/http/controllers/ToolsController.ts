@@ -3,6 +3,7 @@ import CreateTagService from '@modules/tools/services/CreateTagService';
 import DeleteToolService from '@modules/tools/services/DeleteToolService';
 import CreateToolService from '@modules/tools/services/CreateToolService';
 import ListToolsService from '@modules/tools/services/ListToolsService';
+import FilterToolsService from '@modules/tools/services/FilterToolsService';
 import { container } from 'tsyringe';
 
 export default class ToolsController {
@@ -35,7 +36,17 @@ export default class ToolsController {
   }
 
   public async show(request: Request, response: Response): Promise<Response> {
-    // const { id } = request.params;
+    const tagFilter = request.query.tag;
+
+    if (tagFilter) {
+      const filterToolsService = container.resolve(FilterToolsService);
+
+      const tools = await filterToolsService.execute(tagFilter.toString());
+
+      console.log(tools);
+
+      return response.status(200).json(tools);
+    }
 
     const deleteToolService = container.resolve(ListToolsService);
 
@@ -45,5 +56,19 @@ export default class ToolsController {
       const { tags: createdTags, ...rest } = tool;
       return { ...rest, tags: createdTags.map((tag) => tag.name) };
     }));
+  }
+
+  public async filter(request: Request, response: Response): Promise<Response> {
+    const tagFilter = request.query.tag;
+
+    console.log(tagFilter);
+
+    const filterToolsService = container.resolve(FilterToolsService);
+
+    const tools = await filterToolsService.execute('node');
+
+    console.log(tools);
+
+    return response.status(200).json(tools.map((tool) => tool.tags));
   }
 }

@@ -17,6 +17,8 @@ toolsRouter.post('/', celebrate({
   },
 }), toolsController.create);
 
+// toolsRouter.get('/', toolsController.filter);
+
 toolsRouter.get('/', toolsController.show);
 
 toolsRouter.delete('/:id', celebrate({

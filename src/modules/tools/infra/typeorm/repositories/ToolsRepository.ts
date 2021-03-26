@@ -38,6 +38,10 @@ export default class ToolsRepository implements IToolsRepository {
     return this.ormRepository.find();
   }
 
+  public async filterTools(tag: string): Promise<Tool[] | undefined> {
+    return this.ormRepository.createQueryBuilder('tools').innerJoinAndMapMany('tools.tags', 'tags', '').where('tags.name = :name', { name: tag }).getMany();
+  }
+
   public async remove(tool: Tool): Promise<void> {
     await this.ormRepository.remove(tool);
   }
