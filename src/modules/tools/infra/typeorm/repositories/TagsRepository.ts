@@ -22,9 +22,7 @@ export default class TagsRepository implements ITagsRepository {
       name,
     });
 
-    await this.ormRepository.save(tag);
-
-    return tag;
+    return this.ormRepository.save(tag);
   }
 
   public async save(tag: Tag): Promise<Tag> {

@@ -25,7 +25,7 @@ export default class Tool {
   description: string;
 
   @ManyToMany(() => Tag, (tag) => tag.tools, {
-    cascade: ['insert', 'update'],
+    cascade: ['insert', 'update'], eager: true,
   })
   @JoinTable({
     name: 'tags_tools', // table name for the junction table of this relation

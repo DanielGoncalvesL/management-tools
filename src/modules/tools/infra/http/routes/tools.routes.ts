@@ -17,6 +17,8 @@ toolsRouter.post('/', celebrate({
   },
 }), toolsController.create);
 
+toolsRouter.get('/', toolsController.show);
+
 toolsRouter.delete('/:id', celebrate({
   [Segments.PARAMS]: {
     id: Joi.string().uuid().required(),
