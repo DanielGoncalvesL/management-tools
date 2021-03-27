@@ -14,7 +14,7 @@ export default class DeleteToolService {
     const tool = await this.toolsRepository.findById(id);
 
     if (!tool) {
-      throw new AppError('Tool is not existed!', 404);
+      throw new AppError('Tool is not existed!');
     }
 
     await this.toolsRepository.remove(tool);

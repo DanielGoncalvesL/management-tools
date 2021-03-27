@@ -31,13 +31,6 @@ app.use(routes);
 
 app.use((error: Error, _: Request, response: Response, __: NextFunction) => {
   if (error instanceof AppError) {
-    if (error.statusCode === 500) {
-      return response.status(500).json({
-        status: 'error',
-        type: 'Internal',
-        message: 'Internal server error',
-      });
-    }
     const { statusCode } = error;
 
     return response.status(statusCode).json({
@@ -66,6 +59,10 @@ app.use((error: Error, _: Request, response: Response, __: NextFunction) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log('🚀 Server started on port 3000!');
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(3000, () => {
+    console.log('🚀 Server started on port 3000!');
+  });
+}
+
+export default app;

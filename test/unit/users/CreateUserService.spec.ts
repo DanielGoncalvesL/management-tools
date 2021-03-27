@@ -27,11 +27,13 @@ describe('CreateUser', () => {
   });
 
   it('should not be able to create a user with existing email', async () => {
-    await createUserService.execute({
+    const user = await fakeUserRepository.create({
       name: 'Jhon Doe',
       email: 'jhondoe@example.com',
       password: '123456',
     });
+
+    jest.spyOn(fakeUserRepository, 'findByEmail').mockImplementationOnce(async () => user);
 
     await expect(createUserService.execute({
       name: 'Jhon Doe',
