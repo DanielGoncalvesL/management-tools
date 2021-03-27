@@ -4,14 +4,14 @@ import IToolsRepository from '@modules/tools/repositories/IToolsRepository';
 import { injectable, inject } from 'tsyringe';
 
 @injectable()
-export default class FilterToolsServiceByTagName {
+export default class FilterToolsByTagNameService {
   constructor(
     @inject('ToolsRepository')
     private toolsRepository: IToolsRepository,
   ) {}
 
-  public async execute(data: string): Promise<Tool[]> {
-    let tools = await this.toolsRepository.findToolsByTagName(data);
+  public async execute(tag: string): Promise<Tool[]> {
+    let tools = await this.toolsRepository.findToolsByTagName(tag);
 
     if (!tools) {
       tools = [];

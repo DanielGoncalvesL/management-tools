@@ -34,10 +34,6 @@ class FakeUserRepositories implements IUsersRepository {
 
     return user;
   }
-
-  public async listUsers(): Promise<User[] | undefined> {
-    return undefined;
-  }
 }
 
 export default FakeUserRepositories;

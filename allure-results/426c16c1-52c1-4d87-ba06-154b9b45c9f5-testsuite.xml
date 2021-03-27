@@ -1,0 +1,23 @@
+<?xml version='1.0'?>
+<ns2:test-suite xmlns:ns2='urn:model.allure.qatools.yandex.ru' start='1616796390302' stop='1616796390311'>
+    <name>CreateTool</name>
+    <title>CreateTool</title>
+    <test-cases>
+        <test-case start='1616796390302' status='passed' stop='1616796390309'>
+            <name>should be able to create a tool</name>
+            <title>should be able to create a tool</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1616796390309' status='passed' stop='1616796390310'>
+            <name>should not be able to create a tool this already exist</name>
+            <title>should not be able to create a tool this already exist</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+    </test-cases>
+</ns2:test-suite>

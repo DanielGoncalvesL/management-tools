@@ -17,6 +17,9 @@
         "@typescript-eslint"
     ],
     "rules": {
+      "import/no-extraneous-dependencies": "off",
+      "array-callback-return":"off",
+      "consistent-return": "off",
       "no-use-before-define": "off",
       "semi":"off",
       "no-console": "off",

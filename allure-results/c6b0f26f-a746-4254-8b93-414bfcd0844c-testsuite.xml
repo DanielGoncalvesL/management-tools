@@ -1,0 +1,23 @@
+<?xml version='1.0'?>
+<ns2:test-suite xmlns:ns2='urn:model.allure.qatools.yandex.ru' start='1616796392775' stop='1616796392780'>
+    <name>ShowProfile</name>
+    <title>ShowProfile</title>
+    <test-cases>
+        <test-case start='1616796392776' status='passed' stop='1616796392779'>
+            <name>should be able to show profile</name>
+            <title>should be able to show profile</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+        <test-case start='1616796392779' status='passed' stop='1616796392780'>
+            <name>should not be able to show the profile of a user who does not exist</name>
+            <title>should not be able to show the profile of a user who does not exist</title>
+            <labels/>
+            <parameters/>
+            <steps/>
+            <attachments/>
+        </test-case>
+    </test-cases>
+</ns2:test-suite>

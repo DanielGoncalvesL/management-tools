@@ -8,7 +8,7 @@ interface IRequest{
 }
 
 @injectable()
-export default class CreateTagService {
+export default class CreateTagsService {
   constructor(
     @inject('TagsRepository')
     private tagsRepository: ITagsRepository,

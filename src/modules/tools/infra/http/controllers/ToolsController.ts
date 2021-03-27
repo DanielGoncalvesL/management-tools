@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import CreateTagService from '@modules/tools/services/CreateTagService';
+import CreateTagService from '@modules/tools/services/CreateTagsService';
 import DeleteToolService from '@modules/tools/services/DeleteToolService';
 import CreateToolService from '@modules/tools/services/CreateToolService';
 import FindAllToolsService from '@modules/tools/services/FindAllToolsService';
