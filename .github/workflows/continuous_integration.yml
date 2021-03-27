@@ -1,0 +1,61 @@
+name: Continuous Integration
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Project checkout
+      uses: actions/checkout@v2
+    - name: Node.js Setup
+      uses: actions/setup-node@v2
+    - name: Installation of Node.js dependencies
+      run: npm install -f
+    - name: Build
+      run: npm run build
+
+  lint:
+    needs: [build]
+
+    runs-on: ubuntu-18.04
+
+    steps:
+    - name: Project checkout
+      uses: actions/checkout@v2
+    - name: Node.js Setup
+      uses: actions/setup-node@v2
+    - name: Installation of Node.js dependencies
+      run: npm install -f
+    - name: Lint
+      run: npm run lint
+
+  tests:
+    needs: [build]
+
+    runs-on: ubuntu-18.04
+
+    strategy:
+      matrix:
+        node: [10]
+
+    steps:
+    - name: Project checkout
+      uses: actions/checkout@v2
+    - name: Node.js v${{ matrix.node }} Setup
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node }}
+    - name: Installation of Node.js dependencies
+      run: npm install -f
+    - name: Start postgres
+      run: |
+        docker run --name postgres -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
+        npm run typeorm schema:sync
+    - name: Unit and Integration Tests
+      run: npm test

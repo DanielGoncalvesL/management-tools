@@ -1,5 +1,7 @@
 # Desafio técnico da sozei
 
+[![Continuous Integration](https://github.com/DanielGoncalvesL/teste-sozei/actions/workflows/continuous_integration.yml/badge.svg)](https://github.com/DanielGoncalvesL/teste-sozei/actions/workflows/continuous_integration.yml)
+
 **Desafio técnico para vaga de back-end júnior da empresa Sozei**
 
 - [Desafio técnico da sozei](#desafio-técnico-da-sozei)
@@ -12,6 +14,7 @@
       - [Executando os testes](#executando-os-testes)
       - [Resultado](#resultado)
   - [Lint](#lint)
+  - [Pipeline](#pipeline)
 
 ---
 
@@ -104,3 +107,14 @@ O resultado dos testes são apresentados no terminal já com a informação de c
 
 É boa prática que os arquivos estejam padronizados, seguindo o padrão de estilo do JS.
 Para isso esse projeto utiliza a lib [eslint](https://www.npmjs.com/package/eslint), que é executado com o comando `npm run lint`.
+
+## Pipeline
+
+[![Continuous Integration](https://github.com/DanielGoncalvesL/teste-sozei/actions/workflows/continuous_integration.yml/badge.svg)](https://github.com/DanielGoncalvesL/teste-sozei/actions/workflows/continuous_integration.yml)
+
+Para garantir que o código entregue está com boa qualidade e respeitando os padrões definidos foi configurada pipeline que a cada `PR` e `Push` valida:
+- _Build_
+- _Lint_
+- _Test_
+
+<img src=https://user-images.githubusercontent.com/55817154/112737822-26669980-8f3c-11eb-8db9-6b57d9057f26.png>
