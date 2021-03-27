@@ -3,6 +3,8 @@
 /.vscode
 /temp/*
 !/temp/.gitkeep
-ormconfig.json
+/dist
+
+yarn-error.log
 coverage
 .env

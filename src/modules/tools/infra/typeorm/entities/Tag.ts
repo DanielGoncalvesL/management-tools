@@ -1,10 +1,5 @@
 import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  ManyToMany,
+  Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToMany,
 } from 'typeorm';
 
 import Tool from '@modules/tools/infra/typeorm/entities/Tool';
