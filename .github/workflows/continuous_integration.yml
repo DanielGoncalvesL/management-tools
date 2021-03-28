@@ -53,9 +53,9 @@ jobs:
         node-version: ${{ matrix.node }}
     - name: Installation of Node.js dependencies
       run: npm install -f
-    - name: Start postgres
-      run: |
-        docker run --name postgres -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
-        npm run typeorm schema:sync
+    - name: Start Postgres
+      run: docker run --name postgres -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
+    - name: Run migrations
+      run: npm run typeorm migration:run
     - name: Unit and Integration Tests
       run: npm test

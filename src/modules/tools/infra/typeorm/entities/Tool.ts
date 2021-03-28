@@ -28,13 +28,13 @@ export default class Tool {
     cascade: ['insert', 'update'], eager: true,
   })
   @JoinTable({
-    name: 'tags_tools', // table name for the junction table of this relation
+    name: 'tools_has_tags', // table name for the junction table of this relation
     joinColumn: {
-      name: 'tools',
+      name: 'tool_id',
       referencedColumnName: 'id',
     },
     inverseJoinColumn: {
-      name: 'tags',
+      name: 'tag_id',
       referencedColumnName: 'id',
     },
   })

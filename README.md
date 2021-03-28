@@ -47,7 +47,7 @@ docker run --name postgres -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
 
 **4** - Para configurar o banco execute:
 ```sh
-npm run typeorm schema:sync
+npm run typeorm migration:run
 ```
 
 **4** - Para iniciar a aplicação execute:
