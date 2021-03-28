@@ -5,8 +5,6 @@ import 'express-async-errors';
 
 import cors from 'cors';
 
-import open from 'open';
-
 import swaggerUi from 'swagger-ui-express';
 
 import '@shared/infra/typeorm';
@@ -64,7 +62,6 @@ app.use((error: Error, _: Request, response: Response, __: NextFunction) => {
 if (process.env.NODE_ENV !== 'test') {
   app.listen(3000, () => {
     console.log('🚀 Server started on port 3000!');
-    open('http://localhost:3000/docs-api');
   });
 }
 

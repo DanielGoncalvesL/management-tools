@@ -40,22 +40,8 @@ jobs:
 
     runs-on: ubuntu-18.04
 
-    strategy:
-      matrix:
-        node: [10]
-
     steps:
     - name: Project checkout
       uses: actions/checkout@v2
-    - name: Node.js v${{ matrix.node }} Setup
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node }}
-    - name: Installation of Node.js dependencies
-      run: npm install -f
-    - name: Start Postgres
-      run: docker run --name postgres -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
-    - name: Run migrations
-      run: npm run typeorm migration:run
     - name: Unit and Integration Tests
-      run: npm test
+      run: make run-tests

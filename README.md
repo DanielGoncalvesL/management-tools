@@ -7,7 +7,7 @@
 - [Desafio técnico da sozei](#desafio-técnico-da-sozei)
   - [Instalação e execução](#instalação-e-execução)
     - [Pré-requisitos](#pré-requisitos)
-    - [Clonando o repositório](#clonando-o-repositório)
+    - [Executando o projeto](#executando-o-projeto)
   - [Sobre o projeto](#sobre-o-projeto)
     - [Estrutura de diretórios](#estrutura-de-diretórios)
     - [Documentação](#documentação)
@@ -23,9 +23,9 @@
 
 ### Pré-requisitos
 
-- [Git](https://git-scm.com/download/) e [Node.js](https://nodejs.org/en/download/) instalados.
+- [Git](https://git-scm.com/download/), [Node.js](https://nodejs.org/en/download/) e [Docker](https://docs.docker.com/get-docker/) instalados.
 
-### Clonando o repositório
+### Executando o projeto
 
 Todos os comandos abaixo são feitos no terminal
 
@@ -35,26 +35,13 @@ Todos os comandos abaixo são feitos no terminal
 git clone https://github.com/DanielGoncalvesL/teste-sozei.git && cd teste-sozei
 ```
 
-**2** - Instale as dependências do projeto:
+**2** - Inicie a aplicação:
 
 ```sh
-npm install
+make start-app
 ```
 
-**3** - Inicie o banco de dados da aplicação:
-```sh
-docker run --name postgres -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
-```
-
-**4** - Para configurar o banco execute:
-```sh
-npm run typeorm migration:run
-```
-
-**4** - Para iniciar a aplicação execute:
-```sh
-npm start
-```
+> O comando `start-app` executa o serviço `server` do [docker-compose](./docker-compose.yml), que baixa a imagem do _postgres_, executa as migrations, builda o dockerfile do projeto e inicia a aplicação na porta 3000.
 
 ## Sobre o projeto
 
@@ -89,7 +76,6 @@ src/
 
 Após iniciar a aplicação, a documentação de toda a api estará disponível a partir do endereço <http://localhost:3000/docs-api>.
 
-> A documentação será aberta automaticamente após executar o comando `npm start`.
 
 
 ### Testes
@@ -100,7 +86,7 @@ Os testes foram divididos em unitários e integração a fim de garantir a maior
 Para executar os testes unitários e de integração execute o seguinte comando:
 
 ```sh
-npm test
+make run-tests
 ```
 
 #### Resultado
@@ -124,4 +110,4 @@ Para garantir que o código entregue está com boa qualidade e respeitando os pa
 - _Lint_
 - _Test_
 
-<img src=https://user-images.githubusercontent.com/55817154/112737822-26669980-8f3c-11eb-8db9-6b57d9057f26.png>
+<img src=https://user-images.githubusercontent.com/55817154/112775721-18844780-9014-11eb-9d1e-e5908dcfed0f.png>

@@ -1,0 +1,58 @@
+version: '3'
+
+services:
+  server:
+    build: .
+    container_name: server
+    command: sh -c "sleep 10s && yarn start"
+    volumes:
+      - .:/home/node/api
+      - /home/node/api/node_modules
+    ports:
+      - '3000:3000'
+    depends_on:
+      - postgres
+      - migrations
+    networks:
+      - teste-sozei-network
+
+  tests:
+    build: .
+    container_name: tests
+    command: sh -c "sleep 10s && yarn test"
+    volumes:
+      - .:/home/node/api
+      - /home/node/api/node_modules
+    depends_on:
+      - postgres
+      - migrations
+    networks:
+      - teste-sozei-network
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "docker"
+      POSTGRES_DB: "postgres"
+    volumes:
+      - postgres-data:/data
+    networks:
+      - teste-sozei-network
+
+  migrations:
+    build: .
+    command: sh -c "dockerize -wait tcp://postgres:5432 -timeout 300s -wait-retry-interval 1s && yarn typeorm migration:run"
+    container_name: migrations
+    depends_on:
+      - postgres
+    networks:
+      - teste-sozei-network
+
+volumes:
+  postgres-data:
+
+networks:
+  teste-sozei-network:
+    driver: bridge
