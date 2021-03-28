@@ -10,6 +10,7 @@
     - [Clonando o repositório](#clonando-o-repositório)
   - [Sobre o projeto](#sobre-o-projeto)
     - [Estrutura de diretórios](#estrutura-de-diretórios)
+    - [Documentação](#documentação)
     - [Testes](#testes)
       - [Executando os testes](#executando-os-testes)
       - [Resultado](#resultado)
@@ -83,6 +84,12 @@ src/
 - **modules**: Dir com a implementação de todos os módulos da aplicação separados entre si.
 - **shared**: Dir com a implementação de todas as rotas da api e tudo o que é compartilhado entre os módulos.
 - **test**: Dir com todos os testes unitarios e integração.
+
+### Documentação
+
+Após iniciar a aplicação, a documentação de toda a api estará disponível a partir do endereço <http://localhost:3000/docs-api>.
+
+> A documentação será aberta automaticamente após executar o comando `npm start`.
 
 
 ### Testes
