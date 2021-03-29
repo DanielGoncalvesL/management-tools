@@ -61,7 +61,7 @@ app.use((error: Error, _: Request, response: Response, __: NextFunction) => {
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(3000, () => {
-    console.log('🚀 Server started on port 3000!');
+    console.log('\n🚀 Server started on port 3000!\n Open http://localhost:3000/docs-api to read the documentation.');
   });
 }
 
