@@ -4,7 +4,7 @@ services:
   server:
     build: .
     container_name: server
-    command: sh -c "sleep 10s && yarn start"
+    command: sh -c "sleep 10s && yarn dev"
     volumes:
       - .:/home/node/api
       - /home/node/api/node_modules

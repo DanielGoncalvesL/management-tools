@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 
+import dontenv from 'dotenv';
+
 import express, { Request, Response, NextFunction } from 'express';
 import 'express-async-errors';
 
@@ -22,6 +24,8 @@ import { isCelebrateError } from 'celebrate';
 import swaggerFile from './swagger.json';
 
 const app = express();
+
+dontenv.config();
 
 app.use(cors());
 
@@ -64,8 +68,9 @@ app.use((error: Error, _: Request, response: Response, __: NextFunction) => {
 });
 
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(3000, () => {
-    console.log('\n🚀 Server started on port 3000!\n Open http://localhost:3000/docs-api to read the documentation.\n');
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => {
+    console.log(`\n🚀 Server started on port ${port}!\n Open http://localhost:3000/docs-api to read the documentation.\n`);
   });
 }
 

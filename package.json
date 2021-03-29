@@ -5,8 +5,9 @@
     "private": "true",
     "scripts": {
         "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files",
-        "start": "ts-node-dev -r tsconfig-paths/register --transpile-only --ignore-watch node_modules ./src/shared/infra/http/server.ts",
-        "typeorm": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+        "dev": "ts-node-dev -r tsconfig-paths/register --transpile-only --ignore-watch node_modules ./src/shared/infra/http/server.ts",
+        "start": "node ./dist/shared/infra/http/server.js",
+        "typeorm": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js -f ./ormconfig.js",
         "test:watch": "npm test -- --watchAll",
         "test": "cross-env NODE_ENV=test jest",
         "lint": "eslint"
@@ -19,6 +20,7 @@
         "class-transformer": "^0.4.0",
         "cors": "^2.8.5",
         "date-fns": "^2.19.0",
+        "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "express-async-errors": "^3.1.1",
         "jsonwebtoken": "^8.5.1",
