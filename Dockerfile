@@ -12,6 +12,8 @@ RUN yarn
 
 COPY --chown=root:root . .
 
+RUN ls
+
 RUN apk add --no-cache openssl
 
 ENV DOCKERIZE_VERSION v0.6.1
@@ -21,4 +23,4 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 
 EXPOSE 3000
 
-CMD ["yarn", "dev"]
+CMD ["yarn", "start"]
