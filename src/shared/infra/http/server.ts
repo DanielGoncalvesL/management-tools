@@ -5,6 +5,8 @@ import 'express-async-errors';
 
 import cors from 'cors';
 
+import morgan from 'morgan'
+
 import swaggerUi from 'swagger-ui-express';
 
 import '@shared/infra/typeorm';
@@ -25,9 +27,11 @@ app.use(cors());
 
 app.use(express.json());
 
-app.use(routes);
-
 app.use('/docs-api', swaggerUi.serve, swaggerUi.setup(swaggerFile))
+
+app.use(morgan('dev'))
+
+app.use(routes);
 
 app.use((error: Error, _: Request, response: Response, __: NextFunction) => {
   if (error instanceof AppError) {
@@ -61,7 +65,7 @@ app.use((error: Error, _: Request, response: Response, __: NextFunction) => {
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(3000, () => {
-    console.log('\n🚀 Server started on port 3000!\n Open http://localhost:3000/docs-api to read the documentation.');
+    console.log('\n🚀 Server started on port 3000!\n Open http://localhost:3000/docs-api to read the documentation.\n');
   });
 }
 
