@@ -26,13 +26,13 @@ A aplicação está disponibilizada no endereço <https://teste-sozei-daniel.her
 
 > Foi utilizado o [Heroku](https://www.heroku.com/) para disponibilização, sendo deployada após validações da pipeline.
 >
-> Para entender sobre acesse  a seção [Pipeline](#pipeline) desse documento. 
+> Para entender sobre acesse  a seção [Pipeline](#pipeline) desse documento.
 
 ## Execução local
 
 ### Pré-requisitos
 
-- [Git](https://git-scm.com/download/), [Node.js](https://nodejs.org/en/download/) e [Docker](https://docs.docker.com/get-docker/) instalados.
+- [Git](https://git-scm.com/download/), [Node.js](https://nodejs.org/en/download/),[Docker](https://docs.docker.com/get-docker/) e [Docker-Compose](https://docs.docker.com/compose/install/) instalados.
 
 ### Executando o projeto
 
@@ -70,10 +70,10 @@ src/
  ├─ shared/
  |   ├─ container/
  |   ├─ errors/
- |   └─ infra/
- ├─ test/
- |   ├─ integration/
- |   └─ unit/
+ |   ├─ infra/
+ |   └─ test/
+ |    ├─ integration/
+ |    └─ unit/
  └─ package.json
 ```
 
@@ -121,4 +121,4 @@ Para garantir que o código entregue está com boa qualidade e respeitando os pa
 
 Após a execução dos _jobs_ acima é feito deploy no _Heroku_, no endereço <https://teste-sozei-daniel.herokuapp.com/docs-api>.
 
-<img src=https://user-images.githubusercontent.com/29241659/112916143-5ba6ef00-90d6-11eb-8ad8-cb3aa2d735d5.png>
+<img src=https://user-images.githubusercontent.com/55817154/113007972-0823b800-914d-11eb-8648-4ab7023a41b4.png>
