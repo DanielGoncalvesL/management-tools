@@ -33,7 +33,9 @@ app.use(express.json());
 
 app.use('/docs-api', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
-app.use(morgan('dev'))
+if (process.env.NODE_ENV !== 'test') {
+  app.use(morgan('dev'))
+}
 
 app.use(routes);
 

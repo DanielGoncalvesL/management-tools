@@ -5,7 +5,8 @@
 **Desafio técnico para vaga de back-end júnior da empresa Sozei**
 
 - [Desafio técnico da sozei](#desafio-técnico-da-sozei)
-  - [Instalação e execução](#instalação-e-execução)
+  - [Execução remota](#execução-remota)
+  - [Execução local](#execução-local)
     - [Pré-requisitos](#pré-requisitos)
     - [Executando o projeto](#executando-o-projeto)
   - [Sobre o projeto](#sobre-o-projeto)
@@ -19,7 +20,15 @@
 
 ---
 
-## Instalação e execução
+## Execução remota
+
+A aplicação está disponibilizada no endereço <https://teste-sozei-daniel.herokuapp.com/docs-api>. Acesse caso não queira subir a aplicação localmente.
+
+> Foi utilizado o [Heroku](https://www.heroku.com/) para disponibilização, sendo deployada após validações da pipeline.
+>
+> Para entender sobre acesse  a seção [Pipeline](#pipeline) desse documento. 
+
+## Execução local
 
 ### Pré-requisitos
 
@@ -42,6 +51,8 @@ make start-app
 ```
 
 > O comando `start-app` executa o serviço `server` do [docker-compose](./docker-compose.yml), que baixa a imagem do _postgres_, executa as migrations, builda o dockerfile do projeto e inicia a aplicação na porta 3000.
+>
+> Caso queira remover a aplicação execute `make destroy`.
 
 ## Sobre o projeto
 
@@ -76,8 +87,6 @@ src/
 
 Após iniciar a aplicação, a documentação de toda a api estará disponível a partir do endereço <http://localhost:3000/docs-api>.
 
-
-
 ### Testes
 
 Os testes foram divididos em unitários e integração a fim de garantir a maior cobertura de código no máximo de camadas possíveis. Os testes foram feitos utilzando o [Jest](https://www.npmjs.com/package/jest), [SuperTest](https://www.npmjs.com/package/supertest) e [Faker](https://www.npmjs.com/package/faker)
@@ -110,4 +119,6 @@ Para garantir que o código entregue está com boa qualidade e respeitando os pa
 - _Lint_
 - _Test_
 
-<img src=https://user-images.githubusercontent.com/55817154/112775721-18844780-9014-11eb-9d1e-e5908dcfed0f.png>
+Após a execução dos _jobs_ acima é feito deploy no _Heroku_, no endereço <https://teste-sozei-daniel.herokuapp.com/docs-api>.
+
+<img src=https://user-images.githubusercontent.com/29241659/112916143-5ba6ef00-90d6-11eb-8ad8-cb3aa2d735d5.png>
