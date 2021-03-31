@@ -17,6 +17,7 @@
         "@typescript-eslint"
     ],
     "rules": {
+      "no-nested-ternary":"off",
       "import/no-extraneous-dependencies": "off",
       "array-callback-return":"off",
       "consistent-return": "off",

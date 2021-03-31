@@ -71,7 +71,7 @@ src/
  |   ├─ container/
  |   ├─ errors/
  |   ├─ infra/
- |   └─ test/
+ ├─ test/
  |    ├─ integration/
  |    └─ unit/
  └─ package.json

@@ -16,9 +16,9 @@ jobs:
     - name: Node.js Setup
       uses: actions/setup-node@v2
     - name: Installation of Node.js dependencies
-      run: npm install -f
+      run: yarn
     - name: Build
-      run: npm run build
+      run: yarn build
 
   lint:
     needs: [build]
@@ -31,9 +31,9 @@ jobs:
     - name: Node.js Setup
       uses: actions/setup-node@v2
     - name: Installation of Node.js dependencies
-      run: npm install -f
+      run: yarn
     - name: Lint
-      run: npm run lint
+      run: yarn lint
 
   tests:
     needs: [build]
