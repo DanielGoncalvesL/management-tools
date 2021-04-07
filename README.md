@@ -1,10 +1,10 @@
-# Desafio técnico da sozei
+# Management Tools
 
-[![Continuous Integration](https://github.com/DanielGoncalvesL/teste-sozei/actions/workflows/continuous_integration.yml/badge.svg)](https://github.com/DanielGoncalvesL/teste-sozei/actions/workflows/continuous_integration.yml)
+[![Continuous Integration](https://github.com/DanielGoncalvesL/management-tools/actions/workflows/continuous_integration.yml/badge.svg)](https://github.com/DanielGoncalvesL/management-tools/actions/workflows/continuous_integration.yml)
 
-**Desafio técnico para vaga de back-end júnior da empresa Sozei**
+**API para gerenciamento de ferramentas**
 
-- [Desafio técnico da sozei](#desafio-técnico-da-sozei)
+- [Management Tools](#management-tools)
   - [Execução remota](#execução-remota)
   - [Execução local](#execução-local)
     - [Pré-requisitos](#pré-requisitos)
@@ -22,7 +22,7 @@
 
 ## Execução remota
 
-A aplicação está disponibilizada no endereço <https://teste-sozei-daniel.herokuapp.com/docs-api>. Acesse caso não queira subir a aplicação localmente.
+A aplicação está disponibilizada no endereço <https://management-tools.herokuapp.com/docs-api>. Acesse caso não queira subir a aplicação localmente.
 
 > Foi utilizado o [Heroku](https://www.heroku.com/) para disponibilização, sendo deployada após validações da pipeline.
 >
@@ -41,7 +41,7 @@ Todos os comandos abaixo são feitos no terminal
 **1** - Faça um clone do repositório e acesse o diretório criado pelo clone.
 
 ```sh
-git clone https://github.com/DanielGoncalvesL/teste-sozei.git && cd teste-sozei
+git clone https://github.com/DanielGoncalvesL/management-tools.git && cd management-tools
 ```
 
 **2** - Inicie a aplicação:
@@ -112,13 +112,13 @@ Para isso esse projeto utiliza a lib [eslint](https://www.npmjs.com/package/esli
 
 ## Pipeline
 
-[![Continuous Integration](https://github.com/DanielGoncalvesL/teste-sozei/actions/workflows/continuous_integration.yml/badge.svg)](https://github.com/DanielGoncalvesL/teste-sozei/actions/workflows/continuous_integration.yml)
+[![Continuous Integration](https://github.com/DanielGoncalvesL/management-tools/actions/workflows/continuous_integration.yml/badge.svg)](https://github.com/DanielGoncalvesL/management-tools/actions/workflows/continuous_integration.yml)
 
 Para garantir que o código entregue está com boa qualidade e respeitando os padrões definidos foi configurada pipeline que a cada `PR` e `Push` valida:
 - _Build_
 - _Lint_
 - _Test_
 
-Após a execução dos _jobs_ acima é feito deploy no _Heroku_, no endereço <https://teste-sozei-daniel.herokuapp.com/docs-api>.
+Após a execução dos _jobs_ acima é feito deploy no _Heroku_, no endereço <https://management-tools.herokuapp.com/docs-api/>.
 
 <img src=https://user-images.githubusercontent.com/55817154/113007972-0823b800-914d-11eb-8648-4ab7023a41b4.png>

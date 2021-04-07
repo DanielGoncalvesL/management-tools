@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "version": "DEV",
-        "title": "Desafio-Sozei Documentation",
+        "title": "Management tools Documentation",
         "description": "Tool management API\n",
         "contact": {
             "email": "danielopesgl05@gmail.com"

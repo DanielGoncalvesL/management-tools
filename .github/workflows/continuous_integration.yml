@@ -55,9 +55,9 @@ jobs:
     steps:
     - name: Project checkout
       uses: actions/checkout@v2
-    - name: Deploy app on Heroku (https://teste-sozei-daniel.herokuapp.com/)
+    - name: Deploy app on Heroku (https://management-tools.herokuapp.com/docs-api/)
       uses: akhileshns/heroku-deploy@v3.12.12
       with:
         heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-        heroku_app_name: "teste-sozei-daniel"
+        heroku_app_name: "management-tools"
         heroku_email: ${{secrets.HEROKU_EMAIL}}
