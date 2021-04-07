@@ -4,6 +4,7 @@
     "license": "MIT",
     "private": "true",
     "scripts": {
+        "commit": "git-cz",
         "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files",
         "dev": "ts-node-dev -r tsconfig-paths/register --transpile-only --ignore-watch node_modules ./src/shared/infra/http/server.ts",
         "start": "node ./dist/shared/infra/http/server.js",
@@ -12,6 +13,11 @@
         "test:watch": "npm test -- --watchAll",
         "test": "cross-env NODE_ENV=test jest",
         "lint": "eslint"
+    },
+    "config": {
+        "commitizen": {
+            "path": "git-cz"
+        }
     },
     "dependencies": {
         "@babel/cli": "^7.13.10",
@@ -58,12 +64,14 @@
         "babel-plugin-module-resolver": "^4.1.0",
         "babel-plugin-transform-decorators": "^6.24.1",
         "babel-plugin-transform-typescript-metadata": "^0.3.2",
+        "commitizen": "^4.2.3",
         "cross-env": "^7.0.3",
         "eslint": "^7.22.0",
         "eslint-config-airbnb-base": "^14.2.1",
         "eslint-import-resolver-typescript": "^2.4.0",
         "eslint-plugin-import": "^2.22.1",
         "faker": "^5.5.0",
+        "git-cz": "^4.7.6",
         "jest": "^26.6.3",
         "sinon": "^10.0.0",
         "supertest": "^6.1.3",
