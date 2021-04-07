@@ -1,5 +1,5 @@
 declare namespace Express{
-  export interface Request {
+  export interface Request { // eslint-disable-line
       user: {
           id:string;
       };
