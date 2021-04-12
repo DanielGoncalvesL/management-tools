@@ -30,6 +30,8 @@ services:
       - teste-sozei-network
 
   tests-mutation:
+    environment:
+      - STRYKER_DASHBOARD_API_KEY
     build: .
     container_name: tests-mutation
     command: sh -c "sleep 10s && yarn test:mutation"
