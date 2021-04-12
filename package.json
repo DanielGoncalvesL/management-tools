@@ -13,7 +13,8 @@
         "test": "cross-env NODE_ENV=test jest",
         "lint": "eslint 'src/**/*.ts'",
         "lint:fix": "yarn lint -- --fix",
-        "prepare": "is-ci || husky install"
+        "prepare": "is-ci || husky install",
+        "test:mutation": "cross-env NODE_ENV=test stryker run"
     },
     "config": {
         "commitizen": {
@@ -21,7 +22,7 @@
         }
     },
     "lint-staged": {
-      "*.ts": "yarn lint:fix"
+        "*.ts": "yarn lint:fix"
     },
     "dependencies": {
         "@babel/cli": "^7.13.10",
@@ -56,6 +57,9 @@
         "@commitlint/config-conventional": "^12.1.1",
         "@commitlint/format": "^12.1.1",
         "@commitlint/parse": "^12.1.1",
+        "@stryker-mutator/core": "^4.5.1",
+        "@stryker-mutator/jest-runner": "^4.5.1",
+        "@stryker-mutator/typescript-checker": "^4.5.1",
         "@types/bcryptjs": "^2.4.2",
         "@types/cors": "^2.8.10",
         "@types/express": "^4.17.11",

@@ -21,6 +21,9 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 
 RUN yarn build
 
+RUN apk update && \
+    apk add git
+
 EXPOSE 3000
 
 CMD ["yarn", "start:docker"]

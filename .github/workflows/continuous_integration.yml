@@ -7,7 +7,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -21,8 +20,6 @@ jobs:
       run: yarn build
 
   lint:
-    needs: [build]
-
     runs-on: ubuntu-18.04
 
     steps:
@@ -36,8 +33,6 @@ jobs:
       run: yarn lint
 
   tests:
-    needs: [build]
-
     runs-on: ubuntu-18.04
 
     steps:
@@ -46,9 +41,20 @@ jobs:
     - name: Unit and Integration Tests
       run: make run-tests
 
+  tests-mutation:
+    runs-on: ubuntu-18.04
+
+    steps:
+    - name: Project checkout
+      uses: actions/checkout@v2
+    - name: Mutation test
+      run: make run-tests-mutation
+      env:
+        STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
+
 
   deploy:
-    needs: [lint, tests]
+    needs: [build, lint, tests, tests-mutation]
 
     runs-on: ubuntu-latest
 

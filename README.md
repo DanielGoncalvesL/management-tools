@@ -2,6 +2,8 @@
 
 [![Continuous Integration](https://github.com/DanielGoncalvesL/management-tools/actions/workflows/continuous_integration.yml/badge.svg)](https://github.com/DanielGoncalvesL/management-tools/actions/workflows/continuous_integration.yml)
 
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FDanielGoncalvesL%2Fmanagement-tools%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/DanielGoncalvesL/management-tools/main)
+
 **API para gerenciamento de ferramentas**
 
 - [Management Tools](#management-tools)

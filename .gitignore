@@ -8,3 +8,7 @@
 yarn-error.log
 coverage
 .env
+
+# stryker temp files
+.stryker-tmp
+stryker.log
