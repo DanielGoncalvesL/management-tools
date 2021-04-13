@@ -3,7 +3,8 @@
     "packageManager": "yarn",
     "mutate": [
         "src/**/*.ts",
-        "!src/shared/infra/http/server.ts"
+        "!src/shared/infra/http/server.ts",
+        "!src/shared/infra/typeorm/migrations/**"
     ],
     "reporters": [
         "html",
