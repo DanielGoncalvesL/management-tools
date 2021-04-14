@@ -35,9 +35,6 @@ services:
     build: .
     container_name: tests-mutation
     command: sh -c "sleep 10s && yarn test:mutation"
-    volumes:
-      - .:/home/node/api
-      - /home/node/api/node_modules
     depends_on:
       - postgres
       - migrations
