@@ -41,6 +41,8 @@ services:
     depends_on:
       - postgres
       - migrations
+    volumes:
+      - ./reports/mutation:/home/root/api/reports/mutation
     networks:
       - teste-sozei-network
 
