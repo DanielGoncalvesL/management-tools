@@ -23,5 +23,12 @@
     "dashboard": {
         "project": "github.com/DanielGoncalvesL/management-tools",
         "version": process.env.BRANCH
+    },
+    "mutator": {
+        "excludedMutations": [
+            "ArrayDeclaration",
+            "BlockStatement",
+            "ObjectLiteral"
+        ]
     }
 }
