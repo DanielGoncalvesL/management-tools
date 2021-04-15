@@ -32,6 +32,7 @@ services:
   tests-mutation:
     environment:
       - STRYKER_DASHBOARD_API_KEY
+      - BRANCH
     build: .
     container_name: tests-mutation
     command: sh -c "sleep 10s && yarn test:mutation"
