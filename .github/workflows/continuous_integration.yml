@@ -47,10 +47,13 @@ jobs:
     steps:
     - name: Project checkout
       uses: actions/checkout@v2
+    - name: Inject slug/short variables
+      uses: rlespinasse/github-slug-action@v3.x
     - name: Mutation test
       run: make run-tests-mutation
       env:
         STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
+        BRANCH: ${{ env.GITHUB_REF_SLUG }}
 
 
   deploy:
