@@ -5,9 +5,7 @@
     "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
     "packageManager": "yarn",
     "mutate": [
-        "src/**/*.ts",
-        "!src/shared/infra/http/server.ts",
-        "!src/shared/infra/typeorm/migrations/**"
+        "src/**/*.ts"
     ],
     "reporters": [
         "html",

@@ -1,73 +1,40 @@
-version: '3'
+
+version: '3.8'
 
 services:
-  server:
-    build: .
-    container_name: server
-    command: sh -c "sleep 10s && yarn start:docker"
-    volumes:
-      - .:/home/node/api
-      - /home/node/api/node_modules
+  postgresql:
+    image: postgresql:14.2-alpine
+    container_name: postgresql-container
+    restart: always
     ports:
-      - '3000:3000'
-    depends_on:
-      - postgres
-      - migrations
-    networks:
-      - teste-sozei-network
-
-  tests:
-    build: .
-    container_name: tests
-    command: sh -c "sleep 10s && yarn test"
-    volumes:
-      - .:/home/node/api
-      - /home/node/api/node_modules
-    depends_on:
-      - postgres
-      - migrations
-    networks:
-      - teste-sozei-network
-
-  tests-mutation:
+      - ${POSTGRESQL_PORT}:5432
     environment:
-      - STRYKER_DASHBOARD_API_KEY
-      - BRANCH
-    build: .
-    container_name: tests-mutation
-    command: sh -c "sleep 10s && yarn test:mutation"
-    depends_on:
-      - postgres
-      - migrations
+      POSTGRES_USER: ${POSTGRESQL_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD}
+      POSTGRES_DB: ${POSTGRESQL_DATABASE}
+      TZ: 'America/Sao_Paulo'
     volumes:
-      - ./reports/mutation:/home/root/api/reports/mutation
+      - postgresql-data:/postgresql
     networks:
-      - teste-sozei-network
+      - containers-network
 
-  postgres:
-    image: postgres:13.2-alpine
-    container_name: postgres
+  redis:
+    image: redis:6.2.6-alpine
+    container_name: redis-container
+    restart: always
+    ports:
+      - ${REDIS_PORT}:6379
     environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "docker"
-      POSTGRES_DB: "postgres"
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
     volumes:
-      - postgres-data:/data
+      - redis-data:/redis/data
     networks:
-      - teste-sozei-network
-
-  migrations:
-    build: .
-    command: sh -c "dockerize -wait tcp://postgres:5432 -timeout 300s -wait-retry-interval 1s && yarn typeorm migration:run"
-    container_name: migrations
-    depends_on:
-      - postgres
-    networks:
-      - teste-sozei-network
+      - containers-network
 
 volumes:
-  postgres-data:
+  postgresql-data:
+  redis-data:
 
 networks:
-  teste-sozei-network:
+  containers-network:
     driver: bridge
