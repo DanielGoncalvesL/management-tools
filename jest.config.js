@@ -18,5 +18,5 @@ module.exports = {
       '\\.ts$': 'ts-jest'
   },
   clearMocks: true,
-  setupFiles: ['dotenv/config', './jest.ioredis.mock.js']
+  // setupFiles: ['dotenv/config', './jest.ioredis.mock.js']
 }
