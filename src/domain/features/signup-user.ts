@@ -5,7 +5,7 @@ export interface SignUpUser {
   perform: (params: SignUpUser.Params) => Promise<SignUpUser.Result>;
 }
 
-namespace SignUpUser {
+export namespace SignUpUser {
   export type Params = {
     name: string;
     email: string;
