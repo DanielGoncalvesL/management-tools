@@ -82,4 +82,12 @@ describe('SignUpUserService', () => {
       password: hashedPassword,
     });
   });
+
+  it('should throw if CreateUserRepository throws', async () => {
+    userRepository.createUser.mockImplementationOnce(throwError);
+
+    const promise = sut.perform(userDatas);
+
+    await expect(promise).rejects.toThrow();
+  });
 });
