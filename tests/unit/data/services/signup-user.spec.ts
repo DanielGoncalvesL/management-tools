@@ -5,11 +5,13 @@ import { SignUpUserError } from '@/domain/errors';
 class LoadUserByEmailSpy implements LoadUserByEmailRepository {
   email?: string;
   result = undefined;
+  callsCount = 0;
 
   async loadByEmail(
     params: LoadUserByEmailRepository.Params,
   ): Promise<LoadUserByEmailRepository.Result> {
     this.email = params.email;
+    this.callsCount++;
 
     return this.result;
   }
@@ -28,6 +30,7 @@ describe('SignUpUserService', () => {
     });
 
     expect(loadUserByEmail.email).toBe('any_email');
+    expect(loadUserByEmail.callsCount).toBe(1);
   });
 
   it('should return authentication error when LoadUserByEmail returns undefined', async () => {
