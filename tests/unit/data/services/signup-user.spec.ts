@@ -1,3 +1,4 @@
+import { LoadUserByEmailRepository } from '@/data/contracts/repositories';
 import { SignUpUserError } from '@/domain/errors';
 import { SignUpUser } from '@/domain/features';
 
@@ -11,20 +12,6 @@ class SignUpUserService {
 
     return new SignUpUserError();
   }
-}
-
-interface LoadUserByEmailRepository {
-  loadByEmail: (
-    params: LoadUserByEmailRepository.Params,
-  ) => Promise<LoadUserByEmailRepository.Result>;
-}
-
-namespace LoadUserByEmailRepository {
-  export type Params = {
-    email: string;
-  };
-
-  export type Result = undefined;
 }
 
 class LoadUserByEmailSpy implements LoadUserByEmailRepository {
