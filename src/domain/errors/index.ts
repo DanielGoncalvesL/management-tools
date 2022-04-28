@@ -1,1 +1,1 @@
-export * from './signup-user';
+export * from './email-already-use';

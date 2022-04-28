@@ -26,10 +26,12 @@ export class SignUpUserService {
 
     const hashedPassword = await this.hasher.hash({ plaintext: password });
 
-    await this.userRepository.createUser({
+    const isCreated = await this.userRepository.createUser({
       email,
       name,
       password: hashedPassword,
     });
+
+    return isCreated;
   }
 }

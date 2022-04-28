@@ -25,5 +25,5 @@ namespace CreateUserRepository {
     password: string;
   };
 
-  export type Result = undefined;
+  export type Result = boolean;
 }

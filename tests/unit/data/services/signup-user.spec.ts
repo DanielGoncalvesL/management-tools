@@ -28,6 +28,7 @@ describe('SignUpUserService', () => {
     hasher = mock();
 
     userRepository.checkByEmail.mockResolvedValue(false);
+    userRepository.createUser.mockResolvedValue(true);
     hasher.hash.mockResolvedValue(hashedPassword);
 
     sut = new SignUpUserService(userRepository, hasher);
@@ -90,5 +91,19 @@ describe('SignUpUserService', () => {
     const promise = sut.perform(userDatas);
 
     await expect(promise).rejects.toThrow();
+  });
+
+  it('should return true when a user is created', async () => {
+    const isCreated = await sut.perform(userDatas);
+
+    expect(isCreated).toBeTruthy();
+  });
+
+  it('should return false when a user is not created', async () => {
+    userRepository.createUser.mockResolvedValueOnce(false);
+
+    const isCreated = await sut.perform(userDatas);
+
+    expect(isCreated).toBeFalsy();
   });
 });

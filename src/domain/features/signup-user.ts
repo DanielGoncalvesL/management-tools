@@ -1,4 +1,3 @@
-import { AccessToken } from '@/domain/models';
 import { EmailAlreadyUseError } from '@/domain/errors';
 
 export interface SignUpUser {
@@ -12,5 +11,5 @@ export namespace SignUpUser {
     password: string;
   };
 
-  export type Result = AccessToken | EmailAlreadyUseError | undefined;
+  export type Result = boolean | EmailAlreadyUseError;
 }
