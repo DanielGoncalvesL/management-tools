@@ -81,6 +81,7 @@ describe('SignUpUserService', () => {
       email: userDatas.email,
       password: hashedPassword,
     });
+    expect(userRepository.createUser).toHaveBeenCalledTimes(1);
   });
 
   it('should throw if CreateUserRepository throws', async () => {
