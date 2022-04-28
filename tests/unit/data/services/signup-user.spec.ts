@@ -1,18 +1,6 @@
 import { LoadUserByEmailRepository } from '@/data/contracts/repositories';
+import { SignUpUserService } from '@/data/services';
 import { SignUpUserError } from '@/domain/errors';
-import { SignUpUser } from '@/domain/features';
-
-class SignUpUserService {
-  constructor(private readonly loadUserByEmail: LoadUserByEmailRepository) {}
-
-  async perform(params: SignUpUser.Params): Promise<SignUpUser.Result> {
-    const { email } = params;
-
-    await this.loadUserByEmail.loadByEmail({ email });
-
-    return new SignUpUserError();
-  }
-}
 
 class LoadUserByEmailSpy implements LoadUserByEmailRepository {
   email?: string;
