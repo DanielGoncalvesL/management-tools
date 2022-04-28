@@ -1,18 +1,22 @@
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { SignUpUser } from '@/domain/features';
-import { CheckUserByEmailRepository } from '@/data/contracts/repositories';
+import {
+  CheckUserByEmailRepository,
+  CreateUserRepository,
+} from '@/data/contracts/repositories';
 import { Hasher } from '@/data/contracts/providers';
 
 export class SignUpUserService {
   constructor(
-    private readonly checkUserByEmailRepository: CheckUserByEmailRepository,
+    private readonly userRepository: CheckUserByEmailRepository &
+      CreateUserRepository,
     private readonly hasher: Hasher,
   ) {}
 
   async perform(params: SignUpUser.Params): Promise<SignUpUser.Result> {
-    const { email, password } = params;
+    const { email, password, name } = params;
 
-    const userExists = await this.checkUserByEmailRepository.checkByEmail({
+    const userExists = await this.userRepository.checkByEmail({
       email,
     });
 
@@ -20,6 +24,12 @@ export class SignUpUserService {
       return new EmailAlreadyUseError();
     }
 
-    await this.hasher.hash({ plaintext: password });
+    const hashedPassword = await this.hasher.hash({ plaintext: password });
+
+    await this.userRepository.createUser({
+      email,
+      name,
+      password: hashedPassword,
+    });
   }
 }

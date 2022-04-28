@@ -1,4 +1,7 @@
-import { CheckUserByEmailRepository } from '@/data/contracts/repositories';
+import {
+  CheckUserByEmailRepository,
+  CreateUserRepository,
+} from '@/data/contracts/repositories';
 import { SignUpUserService } from '@/data/services';
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { mock, MockProxy } from 'jest-mock-extended';
@@ -6,7 +9,9 @@ import { throwError } from '@/tests/unit/mocks';
 import { Hasher } from '@/data/contracts/providers';
 
 describe('SignUpUserService', () => {
-  let checkUserByEmailRepository: MockProxy<CheckUserByEmailRepository>;
+  let userRepository: MockProxy<
+    CheckUserByEmailRepository & CreateUserRepository
+  >;
   let hasher: MockProxy<Hasher>;
   let sut: SignUpUserService;
 
@@ -16,26 +21,29 @@ describe('SignUpUserService', () => {
     password: 'any_password',
   };
 
+  const hashedPassword = 'hashed_password';
+
   beforeEach(() => {
-    checkUserByEmailRepository = mock();
+    userRepository = mock();
     hasher = mock();
 
-    checkUserByEmailRepository.checkByEmail.mockResolvedValue(false);
+    userRepository.checkByEmail.mockResolvedValue(false);
+    hasher.hash.mockResolvedValue(hashedPassword);
 
-    sut = new SignUpUserService(checkUserByEmailRepository, hasher);
+    sut = new SignUpUserService(userRepository, hasher);
   });
 
   it('should call CheckUserByEmailRepository with correct params', async () => {
     await sut.perform(userDatas);
 
-    expect(checkUserByEmailRepository.checkByEmail).toHaveBeenCalledWith({
+    expect(userRepository.checkByEmail).toHaveBeenCalledWith({
       email: 'any_email',
     });
-    expect(checkUserByEmailRepository.checkByEmail).toHaveBeenCalledTimes(1);
+    expect(userRepository.checkByEmail).toHaveBeenCalledTimes(1);
   });
 
   it('should return EmailAlreadyUseError when CheckUserByEmailRepository returns data', async () => {
-    checkUserByEmailRepository.checkByEmail.mockResolvedValueOnce(true);
+    userRepository.checkByEmail.mockResolvedValueOnce(true);
 
     const signUpResult = await sut.perform(userDatas);
 
@@ -43,7 +51,7 @@ describe('SignUpUserService', () => {
   });
 
   it('should throw if CheckUserByEmailRepository throws', async () => {
-    checkUserByEmailRepository.checkByEmail.mockImplementationOnce(throwError);
+    userRepository.checkByEmail.mockImplementationOnce(throwError);
 
     const promise = sut.perform(userDatas);
 
@@ -63,5 +71,15 @@ describe('SignUpUserService', () => {
     const promise = sut.perform(userDatas);
 
     await expect(promise).rejects.toThrow();
+  });
+
+  it('should call CreateUserRepository with correct params', async () => {
+    await sut.perform(userDatas);
+
+    expect(userRepository.createUser).toHaveBeenCalledWith({
+      name: userDatas.name,
+      email: userDatas.email,
+      password: hashedPassword,
+    });
   });
 });
