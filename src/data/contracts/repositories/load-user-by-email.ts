@@ -1,13 +1,13 @@
-export interface LoadUserByEmailRepository {
-  loadByEmail: (
-    params: LoadUserByEmailRepository.Params,
-  ) => Promise<LoadUserByEmailRepository.Result>;
+export interface CheckUserByEmailRepository {
+  checkByEmail: (
+    params: CheckUserByEmailRepository.Params,
+  ) => Promise<CheckUserByEmailRepository.Result>;
 }
 
-export namespace LoadUserByEmailRepository {
+export namespace CheckUserByEmailRepository {
   export type Params = {
     email: string;
   };
 
-  export type Result = undefined;
+  export type Result = boolean;
 }

@@ -1,5 +1,5 @@
 import { AccessToken } from '@/domain/models';
-import { SignUpUserError } from '@/domain/errors';
+import { EmailAlreadyUseError } from '@/domain/errors';
 
 export interface SignUpUser {
   perform: (params: SignUpUser.Params) => Promise<SignUpUser.Result>;
@@ -12,5 +12,5 @@ export namespace SignUpUser {
     password: string;
   };
 
-  export type Result = AccessToken | SignUpUserError;
+  export type Result = AccessToken | EmailAlreadyUseError | undefined;
 }

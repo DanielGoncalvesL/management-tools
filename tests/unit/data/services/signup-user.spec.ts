@@ -1,11 +1,15 @@
-import { LoadUserByEmailRepository } from '@/data/contracts/repositories';
+import { CheckUserByEmailRepository } from '@/data/contracts/repositories';
 import { SignUpUserService } from '@/data/services';
-import { SignUpUserError } from '@/domain/errors';
+import { EmailAlreadyUseError } from '@/domain/errors';
 import { mock, MockProxy } from 'jest-mock-extended';
+import { throwError } from '@/tests/unit/mocks';
+import { Hasher } from '@/data/contracts/providers';
 
 describe('SignUpUserService', () => {
-  let loadUserByEmailRepository: MockProxy<LoadUserByEmailRepository>;
+  let checkUserByEmailRepository: MockProxy<CheckUserByEmailRepository>;
+  let hasher: MockProxy<Hasher>;
   let sut: SignUpUserService;
+
   const userDatas = {
     name: 'any_name',
     email: 'any_email',
@@ -13,23 +17,51 @@ describe('SignUpUserService', () => {
   };
 
   beforeEach(() => {
-    loadUserByEmailRepository = mock();
+    checkUserByEmailRepository = mock();
+    hasher = mock();
 
-    sut = new SignUpUserService(loadUserByEmailRepository);
+    checkUserByEmailRepository.checkByEmail.mockResolvedValue(false);
+
+    sut = new SignUpUserService(checkUserByEmailRepository, hasher);
   });
 
-  it('should call LoadUserByEmailRepository with correct params', async () => {
+  it('should call CheckUserByEmailRepository with correct params', async () => {
     await sut.perform(userDatas);
 
-    expect(loadUserByEmailRepository.loadByEmail).toHaveBeenCalledWith({
+    expect(checkUserByEmailRepository.checkByEmail).toHaveBeenCalledWith({
       email: 'any_email',
     });
-    expect(loadUserByEmailRepository.loadByEmail).toHaveBeenCalledTimes(1);
+    expect(checkUserByEmailRepository.checkByEmail).toHaveBeenCalledTimes(1);
   });
 
-  it('should return authentication error when LoadUserByEmailRepository returns undefined', async () => {
+  it('should return EmailAlreadyUseError when CheckUserByEmailRepository returns data', async () => {
+    checkUserByEmailRepository.checkByEmail.mockResolvedValueOnce(true);
+
     const signUpResult = await sut.perform(userDatas);
 
-    expect(signUpResult).toEqual(new SignUpUserError());
+    expect(signUpResult).toEqual(new EmailAlreadyUseError());
+  });
+
+  it('should throw if CheckUserByEmailRepository throws', async () => {
+    checkUserByEmailRepository.checkByEmail.mockImplementationOnce(throwError);
+
+    const promise = sut.perform(userDatas);
+
+    await expect(promise).rejects.toThrow();
+  });
+
+  it('should call Hasher with correct params', async () => {
+    await sut.perform(userDatas);
+
+    expect(hasher.hash).toBeCalledWith({ plaintext: userDatas.password });
+    expect(hasher.hash).toHaveBeenCalledTimes(1);
+  });
+
+  it('should throw if Hasher throws', async () => {
+    hasher.hash.mockImplementationOnce(throwError);
+
+    const promise = sut.perform(userDatas);
+
+    await expect(promise).rejects.toThrow();
   });
 });

@@ -1,6 +1,6 @@
-export class SignUpUserError extends Error {
+export class EmailAlreadyUseError extends Error {
   constructor() {
-    super('SignUp failed');
-    this.name = 'SignUpError';
+    super('SignUp failed: Email already use');
+    this.name = 'EmailAlreadyUseError';
   }
 }
