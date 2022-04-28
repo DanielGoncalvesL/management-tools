@@ -1,25 +1,11 @@
 import { LoadUserByEmailRepository } from '@/data/contracts/repositories';
 import { SignUpUserService } from '@/data/services';
 import { SignUpUserError } from '@/domain/errors';
-
-class LoadUserByEmailSpy implements LoadUserByEmailRepository {
-  email?: string;
-  result = undefined;
-  callsCount = 0;
-
-  async loadByEmail(
-    params: LoadUserByEmailRepository.Params,
-  ): Promise<LoadUserByEmailRepository.Result> {
-    this.email = params.email;
-    this.callsCount++;
-
-    return this.result;
-  }
-}
+import { mock } from 'jest-mock-extended';
 
 describe('SignUpUserService', () => {
   it('should call LoadUserByEmail with correct params', async () => {
-    const loadUserByEmail = new LoadUserByEmailSpy();
+    const loadUserByEmail = mock<LoadUserByEmailRepository>();
 
     const sut = new SignUpUserService(loadUserByEmail);
 
@@ -29,14 +15,16 @@ describe('SignUpUserService', () => {
       password: 'any_password',
     });
 
-    expect(loadUserByEmail.email).toBe('any_email');
-    expect(loadUserByEmail.callsCount).toBe(1);
+    expect(loadUserByEmail.loadByEmail).toHaveBeenCalledWith({
+      email: 'any_email',
+    });
+    expect(loadUserByEmail.loadByEmail).toHaveBeenCalledTimes(1);
   });
 
   it('should return authentication error when LoadUserByEmail returns undefined', async () => {
-    const loadUserByEmail = new LoadUserByEmailSpy();
+    const loadUserByEmail = mock<LoadUserByEmailRepository>();
 
-    loadUserByEmail.result = undefined;
+    loadUserByEmail.loadByEmail.mockResolvedValueOnce(undefined);
 
     const sut = new SignUpUserService(loadUserByEmail);
 
