@@ -29,7 +29,7 @@ class LoadUserByEmailSpy implements LoadUserByEmailRepository {
 }
 
 describe('SignUpUserService', () => {
-  it('', async () => {
+  it('should call LoadUserByEmail with correct params', async () => {
     const loadUserByEmail = new LoadUserByEmailSpy();
 
     const sut = new SignUpUserService(loadUserByEmail);
