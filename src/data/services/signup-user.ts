@@ -5,6 +5,7 @@ import {
   CreateUserRepository,
 } from '@/data/contracts/repositories';
 import { Hasher, TokenGenerator } from '@/data/contracts/providers';
+import { AccessToken } from '@/domain/models/access-token';
 
 export class SignUpUserService {
   constructor(
@@ -33,7 +34,10 @@ export class SignUpUserService {
       password: hashedPassword,
     });
 
-    await this.tokenGenerator.generateToken({ key: id });
+    await this.tokenGenerator.generateToken({
+      key: id,
+      expirationInMs: AccessToken.expirationInMs,
+    });
 
     return { token: 'any_token' };
   }

@@ -7,6 +7,7 @@ import { EmailAlreadyUseError } from '@/domain/errors';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { throwError } from '@/tests/unit/mocks';
 import { Hasher, TokenGenerator } from '@/data/contracts/providers';
+import { AccessToken } from '@/domain/models/access-token';
 
 describe('SignUpUserService', () => {
   let userRepository: MockProxy<
@@ -95,25 +96,12 @@ describe('SignUpUserService', () => {
     await expect(promise).rejects.toThrow();
   });
 
-  // it('should return true when a user is created', async () => {
-  //   const isCreated = await sut.perform(userDatas);
-
-  //   expect(isCreated).toBeTruthy();
-  // });
-
-  // it('should return false when a user is not created', async () => {
-  //   userRepository.createUser.mockResolvedValueOnce(false);
-
-  //   const isCreated = await sut.perform(userDatas);
-
-  //   expect(isCreated).toBeFalsy();
-  // });
-
   it('should call TokenGenerator with correct params', async () => {
     await sut.perform(userDatas);
 
     expect(tokenGenerator.generateToken).toHaveBeenCalledWith({
       key: 'any_id',
+      expirationInMs: AccessToken.expirationInMs,
     });
     expect(tokenGenerator.generateToken).toHaveBeenCalledTimes(1);
   });
