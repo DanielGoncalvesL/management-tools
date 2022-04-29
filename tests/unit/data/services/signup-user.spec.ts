@@ -6,13 +6,14 @@ import { SignUpUserService } from '@/data/services';
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { throwError } from '@/tests/unit/mocks';
-import { Hasher } from '@/data/contracts/providers';
+import { Hasher, TokenGenerator } from '@/data/contracts/providers';
 
 describe('SignUpUserService', () => {
   let userRepository: MockProxy<
     CheckUserByEmailRepository & CreateUserRepository
   >;
   let hasher: MockProxy<Hasher>;
+  let tokenGenerator: MockProxy<TokenGenerator>;
   let sut: SignUpUserService;
 
   const userDatas = {
@@ -26,12 +27,13 @@ describe('SignUpUserService', () => {
   beforeEach(() => {
     userRepository = mock();
     hasher = mock();
+    tokenGenerator = mock();
 
     userRepository.checkByEmail.mockResolvedValue(false);
-    userRepository.createUser.mockResolvedValue(true);
+    userRepository.createUser.mockResolvedValue({ id: 'any_id' });
     hasher.hash.mockResolvedValue(hashedPassword);
 
-    sut = new SignUpUserService(userRepository, hasher);
+    sut = new SignUpUserService(userRepository, hasher, tokenGenerator);
   });
 
   it('should call CheckUserByEmailRepository with correct params', async () => {
@@ -93,17 +95,26 @@ describe('SignUpUserService', () => {
     await expect(promise).rejects.toThrow();
   });
 
-  it('should return true when a user is created', async () => {
-    const isCreated = await sut.perform(userDatas);
+  // it('should return true when a user is created', async () => {
+  //   const isCreated = await sut.perform(userDatas);
 
-    expect(isCreated).toBeTruthy();
-  });
+  //   expect(isCreated).toBeTruthy();
+  // });
 
-  it('should return false when a user is not created', async () => {
-    userRepository.createUser.mockResolvedValueOnce(false);
+  // it('should return false when a user is not created', async () => {
+  //   userRepository.createUser.mockResolvedValueOnce(false);
 
-    const isCreated = await sut.perform(userDatas);
+  //   const isCreated = await sut.perform(userDatas);
 
-    expect(isCreated).toBeFalsy();
+  //   expect(isCreated).toBeFalsy();
+  // });
+
+  it('should call TokenGenerator with correct params', async () => {
+    await sut.perform(userDatas);
+
+    expect(tokenGenerator.generateToken).toHaveBeenCalledWith({
+      key: 'any_id',
+    });
+    expect(tokenGenerator.generateToken).toHaveBeenCalledTimes(1);
   });
 });

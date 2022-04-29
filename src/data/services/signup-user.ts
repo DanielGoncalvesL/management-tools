@@ -4,13 +4,14 @@ import {
   CheckUserByEmailRepository,
   CreateUserRepository,
 } from '@/data/contracts/repositories';
-import { Hasher } from '@/data/contracts/providers';
+import { Hasher, TokenGenerator } from '@/data/contracts/providers';
 
 export class SignUpUserService {
   constructor(
     private readonly userRepository: CheckUserByEmailRepository &
       CreateUserRepository,
     private readonly hasher: Hasher,
+    private readonly tokenGenerator: TokenGenerator,
   ) {}
 
   async perform(params: SignUpUser.Params): Promise<SignUpUser.Result> {
@@ -26,12 +27,14 @@ export class SignUpUserService {
 
     const hashedPassword = await this.hasher.hash({ plaintext: password });
 
-    const isCreated = await this.userRepository.createUser({
+    const { id } = await this.userRepository.createUser({
       email,
       name,
       password: hashedPassword,
     });
 
-    return isCreated;
+    await this.tokenGenerator.generateToken({ key: id });
+
+    return { token: 'any_token' };
   }
 }

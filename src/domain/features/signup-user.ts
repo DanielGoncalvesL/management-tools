@@ -11,5 +11,5 @@ export namespace SignUpUser {
     password: string;
   };
 
-  export type Result = boolean | EmailAlreadyUseError;
+  export type Result = { token: string } | EmailAlreadyUseError;
 }

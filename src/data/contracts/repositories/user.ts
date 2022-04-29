@@ -18,12 +18,12 @@ export interface CreateUserRepository {
   ) => Promise<CreateUserRepository.Result>;
 }
 
-namespace CreateUserRepository {
+export namespace CreateUserRepository {
   export type Params = {
     name: string;
     email: string;
     password: string;
   };
 
-  export type Result = boolean;
+  export type Result = { id: string };
 }
