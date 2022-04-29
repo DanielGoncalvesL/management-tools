@@ -1,50 +1,35 @@
-import { DataType, newDb } from 'pg-mem';
-import { v4 } from 'uuid';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  getRepository,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { CheckUserByEmailRepository } from '@/data/contracts/repositories';
+import { IBackup } from 'pg-mem';
+import { getConnection, getRepository, Repository } from 'typeorm';
 
-class PgUserRepository implements CheckUserByEmailRepository {
-  async checkByEmail(
-    params: CheckUserByEmailRepository.Params,
-  ): Promise<CheckUserByEmailRepository.Result> {
-    const pgUserRepo = getRepository(PgUser);
-
-    return !!(await pgUserRepo.findOne({ where: { email: params.email } }));
-  }
-}
+import { PgUser } from '@/infra/repositories/postgres/entities';
+import { makeFakeDb } from '@/tests/mocks';
+import { PgUserRepository } from '@/infra/repositories/postgres';
 
 describe('PgUserRepository', () => {
   describe('CheckUserByEmailRepository', () => {
+    let sut: PgUserRepository;
+    let pgUserRepo: Repository<PgUser>;
+    let backup: IBackup;
+
+    beforeAll(async () => {
+      const db = await makeFakeDb();
+
+      backup = db.backup();
+
+      pgUserRepo = getRepository(PgUser);
+    });
+
+    afterAll(async () => {
+      await getConnection().close();
+    });
+
+    beforeEach(() => {
+      backup.restore();
+
+      sut = new PgUserRepository();
+    });
+
     it('should return true if user exists', async () => {
-      const db = newDb();
-      const connection = await db.adapters.createTypeormConnection({
-        type: 'postgres',
-        entities: [PgUser],
-      });
-
-      db.registerExtension('uuid-ossp', schema => {
-        schema.registerFunction({
-          name: 'uuid_generate_v4',
-          returns: DataType.uuid,
-          implementation: v4,
-          impure: true,
-        });
-      });
-
-      db.public.query(
-        'create extension "uuid-ossp"; select uuid_generate_v4();',
-      );
-
-      await connection.synchronize();
-
-      const pgUserRepo = getRepository(PgUser);
-
       await pgUserRepo.save(
         pgUserRepo.create({
           name: 'any_name',
@@ -52,8 +37,6 @@ describe('PgUserRepository', () => {
           password: 'any_password',
         }),
       );
-
-      const sut = new PgUserRepository();
 
       const isExisted = await sut.checkByEmail({ email: 'existing_email' });
 
@@ -69,28 +52,13 @@ describe('PgUserRepository', () => {
       expect(user[0]).toHaveProperty('createdAt');
       expect(user[0]).toHaveProperty('updatedAt');
     });
+
+    it('should return false if user not exists', async () => {
+      const isExisted = await sut.checkByEmail({ email: 'existing_email' });
+
+      expect(isExisted).toBeFalsy();
+    });
   });
 
   describe('CreateUserRepository', () => {});
 });
-
-@Entity({ name: 'user' })
-export class PgUser {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string;
-
-  @Column({ nullable: false })
-  name!: string;
-
-  @Column({ nullable: false, unique: true })
-  email!: string;
-
-  @Column({ nullable: false })
-  password!: string;
-
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt!: Date;
-
-  @CreateDateColumn({ name: 'updated_at' })
-  updatedAt!: Date;
-}

@@ -5,7 +5,7 @@ import {
 import { SignUpUserService } from '@/data/services';
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { mock, MockProxy } from 'jest-mock-extended';
-import { throwError } from '@/tests/unit/mocks';
+import { throwError } from '@/tests/mocks';
 import { Hasher, TokenGenerator } from '@/data/contracts/providers';
 import { AccessToken } from '@/domain/models/access-token';
 
