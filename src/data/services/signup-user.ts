@@ -7,7 +7,7 @@ import {
 import { Hasher, TokenGenerator } from '@/data/contracts/providers';
 import { AccessToken } from '@/domain/models/access-token';
 
-export class SignUpUserService {
+export class SignUpUserService implements SignUpUser {
   constructor(
     private readonly userRepository: CheckUserByEmailRepository &
       CreateUserRepository,
@@ -34,11 +34,11 @@ export class SignUpUserService {
       password: hashedPassword,
     });
 
-    await this.tokenGenerator.generateToken({
+    const accessToken = await this.tokenGenerator.generateToken({
       key: id,
       expirationInMs: AccessToken.expirationInMs,
     });
 
-    return { token: 'any_token' };
+    return new AccessToken(accessToken);
   }
 }

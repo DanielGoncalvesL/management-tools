@@ -24,6 +24,7 @@ describe('SignUpUserService', () => {
   };
 
   const hashedPassword = 'hashed_password';
+  const generateToken = 'any_generated_token';
 
   beforeEach(() => {
     userRepository = mock();
@@ -31,8 +32,12 @@ describe('SignUpUserService', () => {
     tokenGenerator = mock();
 
     userRepository.checkByEmail.mockResolvedValue(false);
+
     userRepository.createUser.mockResolvedValue({ id: 'any_id' });
+
     hasher.hash.mockResolvedValue(hashedPassword);
+
+    tokenGenerator.generateToken.mockResolvedValue(generateToken);
 
     sut = new SignUpUserService(userRepository, hasher, tokenGenerator);
   });
@@ -104,5 +109,19 @@ describe('SignUpUserService', () => {
       expirationInMs: AccessToken.expirationInMs,
     });
     expect(tokenGenerator.generateToken).toHaveBeenCalledTimes(1);
+  });
+
+  it('should throw if TokenGenerator throws', async () => {
+    tokenGenerator.generateToken.mockImplementationOnce(throwError);
+
+    const promise = sut.perform(userDatas);
+
+    await expect(promise).rejects.toThrow();
+  });
+
+  it('should call TokenGenerator with correct params', async () => {
+    const signUpResult = await sut.perform(userDatas);
+
+    expect(signUpResult).toEqual(new AccessToken(generateToken));
   });
 });
