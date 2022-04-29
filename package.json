@@ -23,12 +23,16 @@
         "test:integration": "yarn test --watch -c ./jest.integration.config.js",
         "test:staged": "yarn test --findRelatedTests",
         "test:ci": "yarn test --coverage",
-        "test:coveralls": "yarn test:ci && coveralls < coverage/lcov.info"
-    },
+        "test:coveralls": "yarn test:ci && coveralls < coverage/lcov.info",
+        "test:mutation": "stryker run"
+      },
     "devDependencies": {
         "@commitlint/cli": "^16.2.3",
         "@commitlint/config-conventional": "^16.2.1",
         "@jest-mock/express": "^1.4.5",
+        "@stryker-mutator/core": "^5.6.1",
+        "@stryker-mutator/jest-runner": "^5.6.1",
+        "@stryker-mutator/typescript-checker": "^5.6.1",
         "@types/jest": "^27.4.1",
         "@types/supertest": "^2.0.12",
         "@typescript-eslint/eslint-plugin": "^5.20.0",

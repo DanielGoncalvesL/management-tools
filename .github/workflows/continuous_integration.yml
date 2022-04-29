@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
     - name: Project checkout
@@ -20,7 +20,9 @@ jobs:
       run: yarn build
 
   lint:
-    runs-on: ubuntu-18.04
+    needs: [build]
+
+    runs-on: ubuntu-20.04
 
     steps:
     - name: Project checkout
@@ -33,40 +35,50 @@ jobs:
       run: yarn lint
 
   tests:
-    runs-on: ubuntu-18.04
+    needs: [build]
+
+    runs-on: ubuntu-20.04
 
     steps:
     - name: Project checkout
       uses: actions/checkout@v2
-    - name: Unit and Integration Tests
-      run: make run-tests
+    - name: Node.js Setup
+      uses: actions/setup-node@v2
+    - name: Installation of Node.js dependencies
+      run: yarn
+    - name: Tests
+      run: yarn test
 
   tests-mutation:
-    runs-on: ubuntu-latest
+    needs: [build, lint, tests]
+
+    runs-on: ubuntu-20.04
 
     steps:
     - name: Project checkout
       uses: actions/checkout@v2
-    - name: Inject slug/short variables
-      uses: rlespinasse/github-slug-action@v3.x
-    - name: Mutation test
-      run: make run-tests-mutation
+    - name: Node.js Setup
+      uses: actions/setup-node@v2
+    - name: Installation of Node.js dependencies
+      run: yarn
+    - name: Mutation tests
+      run: yarn test:mutation
       env:
         STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
         BRANCH: ${{ env.GITHUB_REF_SLUG }}
 
 
-  deploy:
-    needs: [build, lint, tests, tests-mutation]
+  # deploy:
+  #   needs: [build, lint, tests, tests-mutation]
 
-    runs-on: ubuntu-latest
+  #   runs-on: ubuntu-20.04
 
-    steps:
-    - name: Project checkout
-      uses: actions/checkout@v2
-    - name: Deploy app on Heroku (https://management-tools.herokuapp.com/docs-api/)
-      uses: akhileshns/heroku-deploy@v3.12.12
-      with:
-        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-        heroku_app_name: "management-tools"
-        heroku_email: ${{secrets.HEROKU_EMAIL}}
+  #   steps:
+  #   - name: Project checkout
+  #     uses: actions/checkout@v2
+  #   - name: Deploy app on Heroku (https://management-tools.herokuapp.com/docs-api/)
+  #     uses: akhileshns/heroku-deploy@v3.12.12
+  #     with:
+  #       heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+  #       heroku_app_name: "management-tools"
+  #       heroku_email: ${{secrets.HEROKU_EMAIL}}
