@@ -4,7 +4,7 @@ module.exports = {
       '!<rootDir>/src/main/**',
       '!<rootDir>/src/**/index.ts'
   ],
-  coverageDirectory: 'coverage',
+  coverageDirectory: 'tests/coverage',
   coverageProvider: 'babel',
   moduleNameMapper: {
       '@/tests/(.+)': '<rootDir>/tests/$1',

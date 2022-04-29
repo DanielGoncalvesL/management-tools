@@ -3,6 +3,7 @@ name: Continuous Integration
 on:
   push:
   pull_request:
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 jobs:
@@ -20,8 +21,6 @@ jobs:
       run: yarn build
 
   lint:
-    needs: [build]
-
     runs-on: ubuntu-20.04
 
     steps:
@@ -35,7 +34,7 @@ jobs:
       run: yarn lint
 
   tests:
-    needs: [build]
+    needs: [build, lint]
 
     runs-on: ubuntu-20.04
 
@@ -47,10 +46,15 @@ jobs:
     - name: Installation of Node.js dependencies
       run: yarn
     - name: Tests
-      run: yarn test
+      run: yarn test:ci
+    - uses: actions/upload-artifact@v2
+      with:
+        name: codeCoverage
+        retention-days: 1
+        path: tests/coverage/lcov.info
 
   tests-mutation:
-    needs: [build, lint, tests]
+    needs: [build, lint]
 
     runs-on: ubuntu-20.04
 
@@ -67,18 +71,40 @@ jobs:
         STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
         BRANCH: ${{ env.GITHUB_REF_SLUG }}
 
+  sonarcloud:
+    needs: [tests, tests-mutation]
 
-  # deploy:
-  #   needs: [build, lint, tests, tests-mutation]
+    name: SonarCloud
 
-  #   runs-on: ubuntu-20.04
+    runs-on: ubuntu-20.04
 
-  #   steps:
-  #   - name: Project checkout
-  #     uses: actions/checkout@v2
-  #   - name: Deploy app on Heroku (https://management-tools.herokuapp.com/docs-api/)
-  #     uses: akhileshns/heroku-deploy@v3.12.12
-  #     with:
-  #       heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-  #       heroku_app_name: "management-tools"
-  #       heroku_email: ${{secrets.HEROKU_EMAIL}}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Download code coverage artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: codeCoverage
+          path: coverage
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: [sonarcloud]
+
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: Project checkout
+      uses: actions/checkout@v2
+    - name: Deploy app on Heroku (https://management-tools.herokuapp.com/docs-api/)
+      uses: akhileshns/heroku-deploy@v3.12.12
+      with:
+        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+        heroku_app_name: "management-tools"
+        heroku_email: ${{secrets.HEROKU_EMAIL}}
