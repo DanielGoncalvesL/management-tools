@@ -1,5 +1,6 @@
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { SignUpUser } from '@/domain/features';
+import { AccessToken } from '@/domain/models/access-token';
 import { mock, MockProxy } from 'jest-mock-extended';
 
 class SignUpUserController {
@@ -29,10 +30,19 @@ class SignUpUserController {
 
     const result = await this.SignUpUser.perform(httpRequest);
 
-    return {
-      statusCode: 401,
-      data: result,
-    };
+    if (result instanceof AccessToken) {
+      return {
+        statusCode: 200,
+        data: {
+          accessToken: result.value,
+        },
+      };
+    } else {
+      return {
+        statusCode: 401,
+        data: result,
+      };
+    }
   }
 }
 
@@ -52,6 +62,7 @@ describe('SignUpUserController', () => {
 
   beforeAll(() => {
     signUpUser = mock();
+    signUpUser.perform.mockResolvedValue(new AccessToken('any_token'));
   });
 
   beforeEach(() => {
@@ -109,6 +120,17 @@ describe('SignUpUserController', () => {
     expect(httpResponse).toEqual({
       statusCode: 401,
       data: new EmailAlreadyUseError(),
+    });
+  });
+
+  it('should return 200 if signup succeds', async () => {
+    const httpResponse = await sut.handle(requestData);
+
+    expect(httpResponse).toEqual({
+      statusCode: 200,
+      data: {
+        accessToken: 'any_token',
+      },
     });
   });
 });
