@@ -7,40 +7,47 @@ class SignUpUserController {
   constructor(private readonly SignUpUser: SignUpUser) {}
 
   async handle(httpRequest: any): Promise<HttpResponse> {
-    if (!httpRequest.name) {
-      return {
-        statusCode: 400,
-        data: new Error('The field token is required'),
-      };
-    }
+    try {
+      if (!httpRequest.name) {
+        return {
+          statusCode: 400,
+          data: new Error('The field token is required'),
+        };
+      }
 
-    if (!httpRequest.email) {
-      return {
-        statusCode: 400,
-        data: new Error('The field email is required'),
-      };
-    }
+      if (!httpRequest.email) {
+        return {
+          statusCode: 400,
+          data: new Error('The field email is required'),
+        };
+      }
 
-    if (!httpRequest.password) {
-      return {
-        statusCode: 400,
-        data: new Error('The field password is required'),
-      };
-    }
+      if (!httpRequest.password) {
+        return {
+          statusCode: 400,
+          data: new Error('The field password is required'),
+        };
+      }
 
-    const result = await this.SignUpUser.perform(httpRequest);
+      const result = await this.SignUpUser.perform(httpRequest);
 
-    if (result instanceof AccessToken) {
+      if (result instanceof AccessToken) {
+        return {
+          statusCode: 200,
+          data: {
+            accessToken: result.value,
+          },
+        };
+      } else {
+        return {
+          statusCode: 401,
+          data: result,
+        };
+      }
+    } catch (error: any) {
       return {
-        statusCode: 200,
-        data: {
-          accessToken: result.value,
-        },
-      };
-    } else {
-      return {
-        statusCode: 401,
-        data: result,
+        statusCode: 500,
+        data: new ServerError(error),
       };
     }
   }
@@ -133,4 +140,25 @@ describe('SignUpUserController', () => {
       },
     });
   });
+
+  it('should return 500 if authentication throws', async () => {
+    const error = new Error('infra_error');
+
+    signUpUser.perform.mockRejectedValueOnce(error);
+
+    const httpResponse = await sut.handle(requestData);
+
+    expect(httpResponse).toEqual({
+      statusCode: 500,
+      data: new ServerError(error),
+    });
+  });
 });
+
+class ServerError extends Error {
+  constructor(error?: Error) {
+    super('Server failed. Try again soon');
+    this.name = 'ServerError';
+    this.stack = error?.stack;
+  }
+}
