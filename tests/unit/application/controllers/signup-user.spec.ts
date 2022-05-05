@@ -1,5 +1,5 @@
 import { SignUpUser } from '@/domain/features';
-import { mock } from 'jest-mock-extended';
+import { mock, MockProxy } from 'jest-mock-extended';
 
 class SignUpUserController {
   constructor(private readonly SignUpUser: SignUpUser) {}
@@ -41,11 +41,23 @@ type HttpResponse = {
 };
 
 describe('SignUpUserController', () => {
+  let sut: SignUpUserController;
+  let signUpUser: MockProxy<SignUpUser>;
+  const requestData = {
+    name: 'any_name',
+    email: 'any_email',
+    password: 'any_password',
+  };
+
+  beforeAll(() => {
+    signUpUser = mock();
+  });
+
+  beforeEach(() => {
+    sut = new SignUpUserController(signUpUser);
+  });
+
   it('should return 400 if name is empty', async () => {
-    const signUpUser = mock<SignUpUser>();
-
-    const sut = new SignUpUserController(signUpUser);
-
     const httpResponse = await sut.handle({
       email: 'any_email',
       password: 'any_password',
@@ -58,10 +70,6 @@ describe('SignUpUserController', () => {
   });
 
   it('should return 400 if email is empty', async () => {
-    const signUpUser = mock<SignUpUser>();
-
-    const sut = new SignUpUserController(signUpUser);
-
     const httpResponse = await sut.handle({
       name: 'any_name',
       password: 'any_password',
@@ -74,10 +82,6 @@ describe('SignUpUserController', () => {
   });
 
   it('should return 400 if password is empty', async () => {
-    const signUpUser = mock<SignUpUser>();
-
-    const sut = new SignUpUserController(signUpUser);
-
     const httpResponse = await sut.handle({
       name: 'any_name',
       email: 'any_email',
@@ -90,21 +94,9 @@ describe('SignUpUserController', () => {
   });
 
   it('should call SignUpUser with correct params', async () => {
-    const signUpUser = mock<SignUpUser>();
+    await sut.handle(requestData);
 
-    const sut = new SignUpUserController(signUpUser);
-
-    await sut.handle({
-      name: 'any_name',
-      email: 'any_email',
-      password: 'any_password',
-    });
-
-    expect(signUpUser.perform).toHaveBeenCalledWith({
-      name: 'any_name',
-      email: 'any_email',
-      password: 'any_password',
-    });
+    expect(signUpUser.perform).toHaveBeenCalledWith(requestData);
     expect(signUpUser.perform).toHaveBeenCalledTimes(1);
   });
 });
