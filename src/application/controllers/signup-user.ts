@@ -7,7 +7,10 @@ import {
   serverError,
   unauthorized,
 } from '@/application/helpers';
-import { RequiredStringValidator } from '../validation';
+import {
+  RequiredStringValidator,
+  ValidationComposite,
+} from '@/application/validation';
 
 type HttpRequest = {
   name: string;
@@ -54,12 +57,8 @@ export class SignUpUserController {
       new RequiredStringValidator(password, 'password'),
     ];
 
-    for (const validator of validators) {
-      const error = validator.validate();
+    const validator = new ValidationComposite(validators);
 
-      if (error !== undefined) {
-        return error;
-      }
-    }
+    return validator.validate();
   }
 }

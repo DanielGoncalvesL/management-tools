@@ -1,13 +1,16 @@
 import { SignUpUserController } from '@/application/controllers';
 import { ServerError, UnauthorizedError } from '@/application/errors';
-import { RequiredStringValidator } from '@/application/validation';
+import {
+  RequiredStringValidator,
+  ValidationComposite,
+} from '@/application/validation';
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { SignUpUser } from '@/domain/features';
 import { AccessToken } from '@/domain/models/access-token';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { mocked } from 'jest-mock';
 
-jest.mock('@/application/validation/required-string');
+jest.mock('@/application/validation/composite');
 
 describe('SignUpUserController', () => {
   let sut: SignUpUserController;
@@ -30,28 +33,20 @@ describe('SignUpUserController', () => {
   it('should return 400 if validation', async () => {
     const error = new Error('validation_error');
 
-    const RequiredStringValidatorSpy = jest.fn().mockImplementationOnce(() => ({
+    const ValidationCompositeSpy = jest.fn().mockImplementationOnce(() => ({
       validate: jest.fn().mockReturnValue(error),
     }));
 
-    mocked(RequiredStringValidator).mockImplementation(
-      RequiredStringValidatorSpy,
-    );
+    mocked(ValidationComposite).mockImplementation(ValidationCompositeSpy);
 
     const httpResponse = await sut.handle(requestData);
 
-    expect(RequiredStringValidatorSpy).toHaveBeenCalledWith(
-      requestData.name,
-      'name',
-    );
-    expect(RequiredStringValidatorSpy).toHaveBeenCalledWith(
-      requestData.email,
-      'email',
-    );
-    expect(RequiredStringValidatorSpy).toHaveBeenCalledWith(
-      requestData.password,
-      'password',
-    );
+    expect(ValidationComposite).toHaveBeenCalledWith([
+      new RequiredStringValidator(requestData.name, 'name'),
+      new RequiredStringValidator(requestData.email, 'email'),
+      new RequiredStringValidator(requestData.password, 'password'),
+    ]);
+
     expect(httpResponse).toEqual({
       statusCode: 400,
       data: error,
