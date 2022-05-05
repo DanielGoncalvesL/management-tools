@@ -1,5 +1,5 @@
 import { SignUpUserController } from '@/application/controllers';
-import { ServerError } from '@/application/errors';
+import { RequiredFieldError, ServerError } from '@/application/errors';
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { SignUpUser } from '@/domain/features';
 import { AccessToken } from '@/domain/models/access-token';
@@ -31,7 +31,7 @@ describe('SignUpUserController', () => {
 
     expect(httpResponse).toEqual({
       statusCode: 400,
-      data: new Error('The field token is required'),
+      data: new RequiredFieldError('name'),
     });
   });
 
@@ -43,7 +43,7 @@ describe('SignUpUserController', () => {
 
     expect(httpResponse).toEqual({
       statusCode: 400,
-      data: new Error('The field email is required'),
+      data: new RequiredFieldError('email'),
     });
   });
 
@@ -55,7 +55,7 @@ describe('SignUpUserController', () => {
 
     expect(httpResponse).toEqual({
       statusCode: 400,
-      data: new Error('The field password is required'),
+      data: new RequiredFieldError('password'),
     });
   });
 

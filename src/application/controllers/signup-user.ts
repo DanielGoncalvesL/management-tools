@@ -1,7 +1,7 @@
 import { SignUpUser } from '@/domain/features';
 import { AccessToken } from '@/domain/models/access-token';
-import { HttpResponse } from '@/application/helpers';
-import { ServerError } from '@/application/errors';
+import { badRequest, HttpResponse } from '@/application/helpers';
+import { RequiredFieldError, ServerError } from '@/application/errors';
 
 export class SignUpUserController {
   constructor(private readonly SignUpUser: SignUpUser) {}
@@ -9,24 +9,15 @@ export class SignUpUserController {
   async handle(httpRequest: any): Promise<HttpResponse> {
     try {
       if (!httpRequest.name) {
-        return {
-          statusCode: 400,
-          data: new Error('The field token is required'),
-        };
+        return badRequest(new RequiredFieldError('name'));
       }
 
       if (!httpRequest.email) {
-        return {
-          statusCode: 400,
-          data: new Error('The field email is required'),
-        };
+        return badRequest(new RequiredFieldError('email'));
       }
 
       if (!httpRequest.password) {
-        return {
-          statusCode: 400,
-          data: new Error('The field password is required'),
-        };
+        return badRequest(new RequiredFieldError('password'));
       }
 
       const result = await this.SignUpUser.perform(httpRequest);
