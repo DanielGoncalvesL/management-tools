@@ -7,12 +7,12 @@ import {
   serverError,
   unauthorized,
 } from '@/application/helpers';
-import { RequiredFieldError } from '@/application/errors';
+import { RequiredStringValidator } from '../validation';
 
 type HttpRequest = {
-  name: string | undefined | null;
-  email: string | undefined | null;
-  password: string | undefined | null;
+  name: string;
+  email: string;
+  password: string;
 };
 
 type Model = Error | { accessToken: string };
@@ -23,16 +23,10 @@ export class SignUpUserController {
     try {
       const { name, email, password } = httpRequest;
 
-      if (name === '' || name === null || name === undefined) {
-        return badRequest(new RequiredFieldError('name'));
-      }
+      const error = this.validate(httpRequest);
 
-      if (email === '' || email === null || email === undefined) {
-        return badRequest(new RequiredFieldError('email'));
-      }
-
-      if (password === '' || password === null || password === undefined) {
-        return badRequest(new RequiredFieldError('password'));
+      if (error !== undefined) {
+        return badRequest(error);
       }
 
       const accessToken = await this.SignUpUser.perform({
@@ -48,6 +42,24 @@ export class SignUpUserController {
       }
     } catch (error: any) {
       return serverError(error);
+    }
+  }
+
+  private validate(httpRequest: HttpRequest): Error | undefined {
+    const { name, email, password } = httpRequest;
+
+    const validators = [
+      new RequiredStringValidator(name, 'name'),
+      new RequiredStringValidator(email, 'email'),
+      new RequiredStringValidator(password, 'password'),
+    ];
+
+    for (const validator of validators) {
+      const error = validator.validate();
+
+      if (error !== undefined) {
+        return error;
+      }
     }
   }
 }
