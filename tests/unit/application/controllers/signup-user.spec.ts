@@ -1,13 +1,13 @@
 import { SignUpUserController } from '@/application/controllers';
-import {
-  RequiredFieldError,
-  ServerError,
-  UnauthorizedError,
-} from '@/application/errors';
+import { ServerError, UnauthorizedError } from '@/application/errors';
+import { RequiredStringValidator } from '@/application/validation';
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { SignUpUser } from '@/domain/features';
 import { AccessToken } from '@/domain/models/access-token';
 import { mock, MockProxy } from 'jest-mock-extended';
+import { mocked } from 'jest-mock';
+
+jest.mock('@/application/validation/required-string');
 
 describe('SignUpUserController', () => {
   let sut: SignUpUserController;
@@ -27,42 +27,34 @@ describe('SignUpUserController', () => {
     sut = new SignUpUserController(signUpUser);
   });
 
-  it('should return 400 if name is empty', async () => {
-    const httpResponse = await sut.handle({
-      name: null as any,
-      email: 'any_email',
-      password: 'any_password',
-    });
+  it('should return 400 if validation', async () => {
+    const error = new Error('validation_error');
 
+    const RequiredStringValidatorSpy = jest.fn().mockImplementationOnce(() => ({
+      validate: jest.fn().mockReturnValue(error),
+    }));
+
+    mocked(RequiredStringValidator).mockImplementation(
+      RequiredStringValidatorSpy,
+    );
+
+    const httpResponse = await sut.handle(requestData);
+
+    expect(RequiredStringValidatorSpy).toHaveBeenCalledWith(
+      requestData.name,
+      'name',
+    );
+    expect(RequiredStringValidatorSpy).toHaveBeenCalledWith(
+      requestData.email,
+      'email',
+    );
+    expect(RequiredStringValidatorSpy).toHaveBeenCalledWith(
+      requestData.password,
+      'password',
+    );
     expect(httpResponse).toEqual({
       statusCode: 400,
-      data: new RequiredFieldError('name'),
-    });
-  });
-
-  it('should return 400 if email is empty', async () => {
-    const httpResponse = await sut.handle({
-      name: 'any_name',
-      email: null as any,
-      password: 'any_password',
-    });
-
-    expect(httpResponse).toEqual({
-      statusCode: 400,
-      data: new RequiredFieldError('email'),
-    });
-  });
-
-  it('should return 400 if password is empty', async () => {
-    const httpResponse = await sut.handle({
-      name: 'any_name',
-      email: 'any_email',
-      password: null as any,
-    });
-
-    expect(httpResponse).toEqual({
-      statusCode: 400,
-      data: new RequiredFieldError('password'),
+      data: error,
     });
   });
 
