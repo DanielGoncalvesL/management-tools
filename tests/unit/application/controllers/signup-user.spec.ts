@@ -1,5 +1,9 @@
 import { SignUpUserController } from '@/application/controllers';
-import { RequiredFieldError, ServerError } from '@/application/errors';
+import {
+  RequiredFieldError,
+  ServerError,
+  UnauthorizedError,
+} from '@/application/errors';
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { SignUpUser } from '@/domain/features';
 import { AccessToken } from '@/domain/models/access-token';
@@ -73,7 +77,7 @@ describe('SignUpUserController', () => {
 
     expect(httpResponse).toEqual({
       statusCode: 401,
-      data: new EmailAlreadyUseError(),
+      data: new UnauthorizedError(),
     });
   });
 

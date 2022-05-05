@@ -1,6 +1,6 @@
 import { SignUpUser } from '@/domain/features';
 import { AccessToken } from '@/domain/models/access-token';
-import { badRequest, HttpResponse } from '@/application/helpers';
+import { badRequest, HttpResponse, unauthorized } from '@/application/helpers';
 import { RequiredFieldError, ServerError } from '@/application/errors';
 
 export class SignUpUserController {
@@ -20,20 +20,17 @@ export class SignUpUserController {
         return badRequest(new RequiredFieldError('password'));
       }
 
-      const result = await this.SignUpUser.perform(httpRequest);
+      const accessToken = await this.SignUpUser.perform(httpRequest);
 
-      if (result instanceof AccessToken) {
+      if (accessToken instanceof AccessToken) {
         return {
           statusCode: 200,
           data: {
-            accessToken: result.value,
+            accessToken: accessToken.value,
           },
         };
       } else {
-        return {
-          statusCode: 401,
-          data: result,
-        };
+        return unauthorized();
       }
     } catch (error: any) {
       return {
