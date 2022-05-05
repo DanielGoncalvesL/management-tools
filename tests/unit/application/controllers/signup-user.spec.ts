@@ -1,3 +1,4 @@
+import { EmailAlreadyUseError } from '@/domain/errors';
 import { SignUpUser } from '@/domain/features';
 import { mock, MockProxy } from 'jest-mock-extended';
 
@@ -26,11 +27,11 @@ class SignUpUserController {
       };
     }
 
-    await this.SignUpUser.perform(httpRequest);
+    const result = await this.SignUpUser.perform(httpRequest);
 
     return {
-      statusCode: 200,
-      data: '',
+      statusCode: 401,
+      data: result,
     };
   }
 }
@@ -98,5 +99,16 @@ describe('SignUpUserController', () => {
 
     expect(signUpUser.perform).toHaveBeenCalledWith(requestData);
     expect(signUpUser.perform).toHaveBeenCalledTimes(1);
+  });
+
+  it('should return 401 if signup fails', async () => {
+    signUpUser.perform.mockResolvedValueOnce(new EmailAlreadyUseError());
+
+    const httpResponse = await sut.handle(requestData);
+
+    expect(httpResponse).toEqual({
+      statusCode: 401,
+      data: new EmailAlreadyUseError(),
+    });
   });
 });
