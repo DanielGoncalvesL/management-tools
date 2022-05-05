@@ -29,6 +29,7 @@ describe('SignUpUserController', () => {
 
   it('should return 400 if name is empty', async () => {
     const httpResponse = await sut.handle({
+      name: null,
       email: 'any_email',
       password: 'any_password',
     });
@@ -42,6 +43,7 @@ describe('SignUpUserController', () => {
   it('should return 400 if email is empty', async () => {
     const httpResponse = await sut.handle({
       name: 'any_name',
+      email: null,
       password: 'any_password',
     });
 
@@ -55,6 +57,7 @@ describe('SignUpUserController', () => {
     const httpResponse = await sut.handle({
       name: 'any_name',
       email: 'any_email',
+      password: null,
     });
 
     expect(httpResponse).toEqual({
