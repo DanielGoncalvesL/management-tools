@@ -3,6 +3,7 @@ import { AccessToken } from '@/domain/models/access-token';
 import {
   badRequest,
   HttpResponse,
+  ok,
   serverError,
   unauthorized,
 } from '@/application/helpers';
@@ -28,12 +29,7 @@ export class SignUpUserController {
       const accessToken = await this.SignUpUser.perform(httpRequest);
 
       if (accessToken instanceof AccessToken) {
-        return {
-          statusCode: 200,
-          data: {
-            accessToken: accessToken.value,
-          },
-        };
+        return ok({ accessToken: accessToken.value });
       } else {
         return unauthorized();
       }
