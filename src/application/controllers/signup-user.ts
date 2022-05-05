@@ -1,7 +1,12 @@
 import { SignUpUser } from '@/domain/features';
 import { AccessToken } from '@/domain/models/access-token';
-import { badRequest, HttpResponse, unauthorized } from '@/application/helpers';
-import { RequiredFieldError, ServerError } from '@/application/errors';
+import {
+  badRequest,
+  HttpResponse,
+  serverError,
+  unauthorized,
+} from '@/application/helpers';
+import { RequiredFieldError } from '@/application/errors';
 
 export class SignUpUserController {
   constructor(private readonly SignUpUser: SignUpUser) {}
@@ -33,10 +38,7 @@ export class SignUpUserController {
         return unauthorized();
       }
     } catch (error: any) {
-      return {
-        statusCode: 500,
-        data: new ServerError(error),
-      };
+      return serverError(error);
     }
   }
 }
