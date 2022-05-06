@@ -1,14 +1,8 @@
 import { SignUpUser } from '@/domain/features';
 import { AccessToken } from '@/domain/models/access-token';
-import {
-  badRequest,
-  HttpResponse,
-  ok,
-  serverError,
-  unauthorized,
-} from '@/application/helpers';
-import { ValidationComposite } from '@/application/validation';
-import { ValidationBuilder } from '../validation/builder';
+import { HttpResponse, ok, unauthorized } from '@/application/helpers';
+import { ValidationBuilder, Validator } from '@/application/validation';
+import { Controller } from '@/application/controllers';
 
 type HttpRequest = {
   name: string;
@@ -17,36 +11,21 @@ type HttpRequest = {
 };
 
 type Model = Error | { accessToken: string };
-export class SignUpUserController {
-  constructor(private readonly SignUpUser: SignUpUser) {}
 
-  async handle(httpRequest: HttpRequest): Promise<HttpResponse<Model>> {
-    try {
-      const { name, email, password } = httpRequest;
-
-      const error = this.validate(httpRequest);
-
-      if (error !== undefined) {
-        return badRequest(error);
-      }
-
-      const accessToken = await this.SignUpUser.perform({
-        name,
-        email,
-        password,
-      });
-
-      if (accessToken instanceof AccessToken) {
-        return ok({ accessToken: accessToken.value });
-      } else {
-        return unauthorized();
-      }
-    } catch (error: any) {
-      return serverError(error);
-    }
+export class SignUpUserController extends Controller {
+  constructor(private readonly signUpUser: SignUpUser) {
+    super();
   }
 
-  private validate(httpRequest: HttpRequest): Error | undefined {
+  async perform(httpRequest: HttpRequest): Promise<HttpResponse<Model>> {
+    const accessToken = await this.signUpUser.perform(httpRequest);
+
+    return accessToken instanceof AccessToken
+      ? ok({ accessToken: accessToken.value })
+      : unauthorized();
+  }
+
+  override buildValidators(httpRequest: HttpRequest): Validator[] {
     const { name, email, password } = httpRequest;
 
     const validators = [
@@ -61,8 +40,6 @@ export class SignUpUserController {
         .build(),
     ];
 
-    const validator = new ValidationComposite(validators);
-
-    return validator.validate();
+    return validators;
   }
 }
