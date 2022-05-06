@@ -1,6 +1,7 @@
 # Management Tools
 
 [![Continuous Integration](https://github.com/DanielGoncalvesL/management-tools/actions/workflows/continuous_integration.yml/badge.svg)](https://github.com/DanielGoncalvesL/management-tools/actions/workflows/continuous_integration.yml) [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FDanielGoncalvesL%2Fmanagement-tools%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/DanielGoncalvesL/management-tools/main)
+[![Coverage Status](https://coveralls.io/repos/github/DanielGoncalvesL/management-tools/badge.svg?branch=refactor/architecture)](https://coveralls.io/github/DanielGoncalvesL/management-tools?branch=refactor/architecture)
 
 **API para gerenciamento de ferramentas**
 

@@ -23,7 +23,6 @@
         "test:integration": "yarn test --watch -c ./jest.integration.config.js",
         "test:staged": "yarn test --findRelatedTests",
         "test:ci": "yarn test --coverage",
-        "test:coveralls": "yarn test:ci && coveralls < coverage/lcov.info",
         "test:mutation": "stryker run",
         "test:watch": "yarn test --watch"
     },
@@ -44,6 +43,7 @@
         "@types/uuid": "^8.3.4",
         "@typescript-eslint/eslint-plugin": "^5.20.0",
         "commitizen": "^4.2.4",
+        "coveralls": "^3.1.1",
         "eslint": "^8.13.0",
         "eslint-config-prettier": "^8.5.0",
         "eslint-config-standard-with-typescript": "^21.0.1",
