@@ -1,25 +1,15 @@
 const root = process.env.TS_NODE_DEV === undefined ? 'dist' : 'src'
 
-const { env } = require(`./${root}/main/config/env`)
 
 module.exports = {
     type: 'postgres',
-    host: env.postgres.host,
-    username: env.postgres.user,
-    password: env.postgres.password,
-    database: env.postgres.database,
-    entities: [`./${root}/infra/db/typeorm/entities/**/*.{js,ts}`],
-    migrations: [`./${root}/infra/db/typeorm/migrations/*.{js,ts}`],
-    cli: {
-        "migrationsDir": `./${root}/infra/db/typeorm/migrations/`
-    },
-    cache: {
-        duration: 5000,
-        type: "ioredis",
-        options: {
-            host: env.redis.host,
-            port: env.redis.port,
-            password: env.redis.password
-        }
-    }
+    host: process.env.POSTGRESQL_HOST,
+    username: process.env.POSTGRESQL_USERNAME,
+    password: process.env.POSTGRESQL_PASSWORD,
+    database: process.env.POSTGRESQL_DATABASE,
+    entities: [`./${root}/infra/repositories/entities/**/*.{js,ts}`],
+    // migrations: [`./${root}/infra/db/typeorm/migrations/*.{js,ts}`],
+    // cli: {
+    //     "migrationsDir": `./${root}/infra/db/typeorm/migrations/`
+    // },
 }

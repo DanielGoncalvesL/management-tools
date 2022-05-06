@@ -7,6 +7,8 @@ import {
 import { Hasher, TokenGenerator } from '@/data/contracts/providers';
 import { AccessToken } from '@/domain/models/access-token';
 
+type Params = SignUpUser.Params;
+type Result = SignUpUser.Result;
 export class SignUpUserService implements SignUpUser {
   constructor(
     private readonly userRepository: CheckUserByEmailRepository &
@@ -15,9 +17,7 @@ export class SignUpUserService implements SignUpUser {
     private readonly tokenGenerator: TokenGenerator,
   ) {}
 
-  async perform(params: SignUpUser.Params): Promise<SignUpUser.Result> {
-    const { email, password, name } = params;
-
+  async perform({ email, name, password }: Params): Promise<Result> {
     const userExists = await this.userRepository.checkByEmail({
       email,
     });

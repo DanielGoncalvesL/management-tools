@@ -1,5 +1,7 @@
 import { RequiredStringValidator, Validator } from '@/application/validation';
 
+type RequiredParams = { value: string; fieldName: string };
+
 export class ValidationBuilder {
   private constructor(private readonly validators: Validator[] = []) {}
 
@@ -7,10 +9,8 @@ export class ValidationBuilder {
     return new ValidationBuilder();
   }
 
-  required(params: { value: string; fieldName: string }): ValidationBuilder {
-    this.validators.push(
-      new RequiredStringValidator(params.value, params.fieldName),
-    );
+  required({ value, fieldName }: RequiredParams): ValidationBuilder {
+    this.validators.push(new RequiredStringValidator(value, fieldName));
 
     return this;
   }

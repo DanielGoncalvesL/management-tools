@@ -17,17 +17,27 @@ export class SignUpUserController extends Controller {
     super();
   }
 
-  async perform(httpRequest: HttpRequest): Promise<HttpResponse<Model>> {
-    const accessToken = await this.signUpUser.perform(httpRequest);
+  async perform({
+    email,
+    name,
+    password,
+  }: HttpRequest): Promise<HttpResponse<Model>> {
+    const accessToken = await this.signUpUser.perform({
+      email,
+      name,
+      password,
+    });
 
     return accessToken instanceof AccessToken
       ? ok({ accessToken: accessToken.value })
       : unauthorized();
   }
 
-  override buildValidators(httpRequest: HttpRequest): Validator[] {
-    const { name, email, password } = httpRequest;
-
+  override buildValidators({
+    email,
+    name,
+    password,
+  }: HttpRequest): Validator[] {
     const validators = [
       ...ValidationBuilder.of()
         .required({ value: name, fieldName: 'name' })

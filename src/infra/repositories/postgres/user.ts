@@ -5,6 +5,12 @@ import {
 import { getRepository, Repository } from 'typeorm';
 import { PgUser } from './entities';
 
+type createParams = CreateUserRepository.Params;
+type createResult = CreateUserRepository.Result;
+
+type checkParams = CheckUserByEmailRepository.Params;
+type checkResult = CheckUserByEmailRepository.Result;
+
 export class PgUserRepository
   implements CheckUserByEmailRepository, CreateUserRepository
 {
@@ -14,25 +20,25 @@ export class PgUserRepository
 
   private readonly pgUserRepo = this.getUserRepository();
 
-  async createUser(
-    params: CreateUserRepository.Params,
-  ): Promise<CreateUserRepository.Result> {
+  async createUser({
+    email,
+    name,
+    password,
+  }: createParams): Promise<createResult> {
     const user = await this.pgUserRepo.save(
       this.pgUserRepo.create({
-        name: params.name,
-        email: params.email,
-        password: params.password,
+        name: name,
+        email: email,
+        password: password,
       }),
     );
 
     return { id: user.id };
   }
 
-  async checkByEmail(
-    params: CheckUserByEmailRepository.Params,
-  ): Promise<CheckUserByEmailRepository.Result> {
+  async checkByEmail({ email }: checkParams): Promise<checkResult> {
     return !!(await this.pgUserRepo.findOne({
-      where: { email: params.email },
+      where: { email: email },
     }));
   }
 }

@@ -1,10 +1,9 @@
-
 version: '3.8'
 
 services:
-  postgresql:
-    image: postgresql:14.2-alpine
-    container_name: postgresql-container
+  postgres:
+    image: postgres:14.2-alpine
+    container_name: postgres-container
     restart: always
     ports:
       - ${POSTGRESQL_PORT}:5432
@@ -14,26 +13,12 @@ services:
       POSTGRES_DB: ${POSTGRESQL_DATABASE}
       TZ: 'America/Sao_Paulo'
     volumes:
-      - postgresql-data:/postgresql
-    networks:
-      - containers-network
-
-  redis:
-    image: redis:6.2.6-alpine
-    container_name: redis-container
-    restart: always
-    ports:
-      - ${REDIS_PORT}:6379
-    environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-    volumes:
-      - redis-data:/redis/data
+      - postgres-data:/postgres
     networks:
       - containers-network
 
 volumes:
-  postgresql-data:
-  redis-data:
+  postgres-data:
 
 networks:
   containers-network:
