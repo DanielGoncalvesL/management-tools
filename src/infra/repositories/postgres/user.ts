@@ -18,15 +18,15 @@ export class PgUserRepository
     return getRepository(PgUser);
   }
 
-  private readonly pgUserRepo = this.getUserRepository();
-
   async createUser({
     email,
     name,
     password,
   }: createParams): Promise<createResult> {
-    const user = await this.pgUserRepo.save(
-      this.pgUserRepo.create({
+    const pgUserRepo = this.getUserRepository();
+
+    const user = await pgUserRepo.save(
+      pgUserRepo.create({
         name: name,
         email: email,
         password: password,
@@ -37,7 +37,9 @@ export class PgUserRepository
   }
 
   async checkByEmail({ email }: checkParams): Promise<checkResult> {
-    return !!(await this.pgUserRepo.findOne({
+    const pgUserRepo = this.getUserRepository();
+
+    return !!(await pgUserRepo.findOne({
       where: { email: email },
     }));
   }
