@@ -8,6 +8,7 @@ type HttpRequest = {
   name: string;
   email: string;
   password: string;
+  passwordConfirmation: string;
 };
 
 type Model = Error | { accessToken: string };
@@ -37,6 +38,7 @@ export class SignUpUserController extends Controller {
     email,
     name,
     password,
+    passwordConfirmation,
   }: HttpRequest): Validator[] {
     const validators = [
       ...ValidationBuilder.of()
@@ -47,6 +49,12 @@ export class SignUpUserController extends Controller {
         .build(),
       ...ValidationBuilder.of()
         .required({ value: password, fieldName: 'password' })
+        .build(),
+      ...ValidationBuilder.of()
+        .compare({
+          field: password,
+          compareField: passwordConfirmation,
+        })
         .build(),
     ];
 

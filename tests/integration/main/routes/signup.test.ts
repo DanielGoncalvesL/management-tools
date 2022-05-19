@@ -22,36 +22,28 @@ describe('SignupUser Routes', () => {
   });
 
   describe('POST /signup', () => {
+    const requestData = {
+      name: 'any_name',
+      email: 'any_email',
+      password: 'any_password',
+      passwordConfirmation: 'any_password',
+    };
+
     it('should return 200 with AccessToken', async () => {
       const { body } = await request(app)
         .post('/api/signup')
-        .send({
-          name: 'any_name',
-          email: 'any_email',
-          password: 'any_password',
-        })
+        .send(requestData)
         .expect(200);
 
       expect(body).toHaveProperty('accessToken');
     });
 
-    it('should return 200 with AccessToken', async () => {
-      await request(app)
-        .post('/api/signup')
-        .send({
-          name: 'any_name',
-          email: 'any_email',
-          password: 'any_password',
-        })
-        .expect(200);
+    it('should return 401 if email already exists', async () => {
+      await request(app).post('/api/signup').send(requestData).expect(200);
 
       const { body } = await request(app)
         .post('/api/signup')
-        .send({
-          name: 'any_name',
-          email: 'any_email',
-          password: 'any_password',
-        })
+        .send(requestData)
         .expect(401);
 
       expect(body).toEqual({

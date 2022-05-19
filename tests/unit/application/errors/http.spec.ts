@@ -1,4 +1,5 @@
 import {
+  CompareFieldsError,
   RequiredFieldError,
   ServerError,
   UnauthorizedError,
@@ -29,6 +30,22 @@ describe('HttpErrors', () => {
 
       expect(error.name).toBe('UnauthorizedError');
       expect(error.message).toBe('Unauthorized');
+    });
+  });
+
+  describe('CompareFieldsError', () => {
+    it('should be able to return correct name and message', () => {
+      const fields = {
+        field: 'any_field',
+        compareField: 'different_field',
+      };
+
+      const error = new CompareFieldsError(fields.field, fields.compareField);
+
+      expect(error.name).toBe('CompareFieldsError');
+      expect(error.message).toBe(
+        `The fields ${fields.field} and ${fields.compareField} are not equals`,
+      );
     });
   });
 });

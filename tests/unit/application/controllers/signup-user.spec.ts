@@ -1,6 +1,9 @@
 import { SignUpUserController } from '@/application/controllers';
 import { UnauthorizedError } from '@/application/errors';
-import { RequiredStringValidator } from '@/application/validation';
+import {
+  CompareFieldsValidator,
+  RequiredStringValidator,
+} from '@/application/validation';
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { SignUpUser } from '@/domain/features';
 import { AccessToken } from '@/domain/models/access-token';
@@ -13,6 +16,7 @@ describe('SignUpUserController', () => {
     name: 'any_name',
     email: 'any_email',
     password: 'any_password',
+    passwordConfirmation: 'any_password',
   };
 
   beforeAll(() => {
@@ -31,13 +35,21 @@ describe('SignUpUserController', () => {
       new RequiredStringValidator(requestData.name, 'name'),
       new RequiredStringValidator(requestData.email, 'email'),
       new RequiredStringValidator(requestData.password, 'password'),
+      new CompareFieldsValidator(
+        requestData.password,
+        requestData.passwordConfirmation,
+      ),
     ]);
   });
 
   it('should call SignUpUser with correct params', async () => {
     await sut.handle(requestData);
 
-    expect(signUpUser.perform).toHaveBeenCalledWith(requestData);
+    expect(signUpUser.perform).toHaveBeenCalledWith({
+      name: requestData.name,
+      email: requestData.email,
+      password: requestData.password,
+    });
     expect(signUpUser.perform).toHaveBeenCalledTimes(1);
   });
 
