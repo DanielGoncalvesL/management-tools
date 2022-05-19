@@ -44,10 +44,10 @@ describe('SignupUser Routes', () => {
       const { body } = await request(app)
         .post('/api/signup')
         .send(requestData)
-        .expect(401);
+        .expect(400);
 
       expect(body).toEqual({
-        error: 'Unauthorized',
+        error: 'SignUp failed: Email already use',
       });
     });
   });

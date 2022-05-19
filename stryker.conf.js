@@ -5,7 +5,8 @@
     "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
     "packageManager": "yarn",
     "mutate": [
-        "src/**/*.ts"
+        "src/**/*.ts",
+        "!src/main/**"
     ],
     "reporters": [
         "html",
@@ -22,11 +23,4 @@
         "project": "github.com/DanielGoncalvesL/management-tools",
         "version": process.env.BRANCH
     },
-    "mutator": {
-        "excludedMutations": [
-            "ArrayDeclaration",
-            "BlockStatement",
-            "ObjectLiteral"
-        ]
-    }
 }

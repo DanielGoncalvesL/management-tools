@@ -2,7 +2,6 @@ import {
   CompareFieldsError,
   RequiredFieldError,
   ServerError,
-  UnauthorizedError,
 } from '@/application/errors';
 
 describe('HttpErrors', () => {
@@ -24,14 +23,14 @@ describe('HttpErrors', () => {
     });
   });
 
-  describe('UnauthorizedError', () => {
-    it('should be able to return correct name and message', () => {
-      const error = new UnauthorizedError();
+  // describe('UnauthorizedError', () => {
+  //   it('should be able to return correct name and message', () => {
+  //     const error = new UnauthorizedError();
 
-      expect(error.name).toBe('UnauthorizedError');
-      expect(error.message).toBe('Unauthorized');
-    });
-  });
+  //     expect(error.name).toBe('UnauthorizedError');
+  //     expect(error.message).toBe('Unauthorized');
+  //   });
+  // });
 
   describe('CompareFieldsError', () => {
     it('should be able to return correct name and message', () => {

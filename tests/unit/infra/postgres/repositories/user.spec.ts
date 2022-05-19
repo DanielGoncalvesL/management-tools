@@ -30,6 +30,17 @@ describe('PgUserRepository', () => {
   });
 
   describe('CheckUserByEmailRepository', () => {
+    it('should call findOne with correct params', async () => {
+      const findOneSpy = jest.spyOn(pgUserRepo, 'findOne');
+
+      await sut.checkByEmail({ email: 'existing_email' });
+
+      expect(findOneSpy).toHaveBeenCalledTimes(1);
+      expect(findOneSpy).toHaveBeenCalledWith({
+        where: { email: 'existing_email' },
+      });
+    });
+
     it('should return true if user exists', async () => {
       await pgUserRepo.save(
         pgUserRepo.create({

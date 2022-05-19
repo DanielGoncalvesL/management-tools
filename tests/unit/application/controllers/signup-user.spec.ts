@@ -1,5 +1,4 @@
 import { SignUpUserController } from '@/application/controllers';
-import { UnauthorizedError } from '@/application/errors';
 import {
   CompareFieldsValidator,
   RequiredStringValidator,
@@ -59,8 +58,8 @@ describe('SignUpUserController', () => {
     const httpResponse = await sut.handle(requestData);
 
     expect(httpResponse).toEqual({
-      statusCode: 401,
-      data: new UnauthorizedError(),
+      statusCode: 400,
+      data: new EmailAlreadyUseError(),
     });
   });
 

@@ -1,6 +1,6 @@
 import { SignUpUser } from '@/domain/features';
 import { AccessToken } from '@/domain/models/access-token';
-import { HttpResponse, ok, unauthorized } from '@/application/helpers';
+import { badRequest, HttpResponse, ok } from '@/application/helpers';
 import { ValidationBuilder, Validator } from '@/application/validation';
 import { Controller } from '@/application/controllers';
 
@@ -29,9 +29,12 @@ export class SignUpUserController extends Controller {
       password,
     });
 
-    return accessToken instanceof AccessToken
-      ? ok({ accessToken: accessToken.value })
-      : unauthorized();
+    if (accessToken instanceof AccessToken) {
+      return ok({ accessToken: accessToken.value });
+    }
+    const error = accessToken;
+
+    return badRequest(error);
   }
 
   override buildValidators({
