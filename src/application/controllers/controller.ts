@@ -18,6 +18,10 @@ export abstract class Controller {
     try {
       return await this.perform(httpRequest);
     } catch (error) {
+      console.error(
+        '🚀 ~ file: controller.ts ~ line 21 ~ Controller ~ handle ~ error',
+        error,
+      );
       return serverError(error as Error);
     }
   }
