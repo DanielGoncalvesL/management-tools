@@ -1,7 +1,10 @@
 import { badRequest, HttpResponse, serverError } from '@/application/helpers';
 import { ValidationComposite, Validator } from '@/application/validation';
+import { Logger } from '@/data/contracts/providers';
 
 export abstract class Controller {
+  constructor(private readonly logger: Logger) {}
+
   abstract perform(httpRequest: any): Promise<HttpResponse>;
 
   buildValidators(httpRequest: any): Validator[] {
@@ -18,11 +21,11 @@ export abstract class Controller {
     try {
       return await this.perform(httpRequest);
     } catch (error) {
-      console.error(
-        '🚀 ~ file: controller.ts ~ line 21 ~ Controller ~ handle ~ error',
-        error,
-      );
-      return serverError(error as Error);
+      const catchError = error as Error;
+
+      this.logger.logging({ paramToLogger: catchError });
+
+      return serverError(catchError);
     }
   }
 

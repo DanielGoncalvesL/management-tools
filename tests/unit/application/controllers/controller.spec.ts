@@ -3,6 +3,8 @@ import { ServerError } from '@/application/errors';
 import { ValidationComposite } from '@/application/validation';
 import { mocked } from 'jest-mock';
 import { HttpResponse } from '@/application/helpers';
+import { Logger } from '@/data/contracts/providers';
+import { mock } from 'jest-mock-extended';
 
 jest.mock('@/application/validation/composite');
 
@@ -19,9 +21,12 @@ class ControllerStub extends Controller {
 
 describe('Controller', () => {
   let sut: ControllerStub;
+  let logger: Logger;
 
   beforeEach(() => {
-    sut = new ControllerStub();
+    logger = mock();
+
+    sut = new ControllerStub(logger);
   });
 
   it('should return 400 if validation', async () => {
