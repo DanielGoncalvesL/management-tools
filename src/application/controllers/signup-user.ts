@@ -3,6 +3,7 @@ import { AccessToken } from '@/domain/models/access-token';
 import { badRequest, HttpResponse, ok } from '@/application/helpers';
 import { ValidationBuilder, Validator } from '@/application/validation';
 import { Controller } from '@/application/controllers';
+import { Logger } from '@/data/contracts/providers';
 
 type HttpRequest = {
   name: string;
@@ -14,8 +15,8 @@ type HttpRequest = {
 type Model = Error | { accessToken: string };
 
 export class SignUpUserController extends Controller {
-  constructor(private readonly signUpUser: SignUpUser) {
-    super();
+  constructor(logger: Logger, private readonly signUpUser: SignUpUser) {
+    super(logger);
   }
 
   async perform({
@@ -55,8 +56,11 @@ export class SignUpUserController extends Controller {
         .build(),
       ...ValidationBuilder.of()
         .compare({
-          field: password,
-          compareField: passwordConfirmation,
+          field: { value: password, name: 'password' },
+          compareField: {
+            value: passwordConfirmation,
+            name: 'passwordConfirmation',
+          },
         })
         .build(),
     ];

@@ -3,6 +3,7 @@ import {
   CompareFieldsValidator,
   RequiredStringValidator,
 } from '@/application/validation';
+import { Logger } from '@/data/contracts/providers';
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { SignUpUser } from '@/domain/features';
 import { AccessToken } from '@/domain/models/access-token';
@@ -10,6 +11,7 @@ import { mock, MockProxy } from 'jest-mock-extended';
 
 describe('SignUpUserController', () => {
   let sut: SignUpUserController;
+  let logger: MockProxy<Logger>;
   let signUpUser: MockProxy<SignUpUser>;
   const requestData = {
     name: 'any_name',
@@ -19,12 +21,13 @@ describe('SignUpUserController', () => {
   };
 
   beforeAll(() => {
+    logger = mock();
     signUpUser = mock();
     signUpUser.perform.mockResolvedValue(new AccessToken('any_token'));
   });
 
   beforeEach(() => {
-    sut = new SignUpUserController(signUpUser);
+    sut = new SignUpUserController(logger, signUpUser);
   });
 
   it('should build Validators correctly', async () => {
@@ -35,8 +38,11 @@ describe('SignUpUserController', () => {
       new RequiredStringValidator(requestData.email, 'email'),
       new RequiredStringValidator(requestData.password, 'password'),
       new CompareFieldsValidator(
-        requestData.password,
-        requestData.passwordConfirmation,
+        { value: requestData.password, name: 'password' },
+        {
+          value: requestData.passwordConfirmation,
+          name: 'passwordConfirmation',
+        },
       ),
     ]);
   });

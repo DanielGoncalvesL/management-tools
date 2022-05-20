@@ -1,22 +1,11 @@
 import { SignUpUserController } from '@/application/controllers';
-import { SignUpUserService } from '@/data/services';
-import { JwtTokenGenerator } from '@/infra/crypto';
-import { BcryptAdapter } from '@/infra/crypto/bcrypt-adapter';
-import { PgUserRepository } from '@/infra/repositories/postgres';
-import { env } from '@/main/config/env';
+import { makeWinstonAdapter } from '@/main/factories/infra';
+import { makeSignUpUserService } from '@/main/factories/services';
 
 export const makeSignUpUserController = (): SignUpUserController => {
-  const userRepository = new PgUserRepository();
+  const winstonAdapter = makeWinstonAdapter();
 
-  const bcryptAdapter = new BcryptAdapter(12);
+  const signUpUserService = makeSignUpUserService();
 
-  const jwtTokenGenerator = new JwtTokenGenerator(env.jwtSecret);
-
-  const signUpUserService = new SignUpUserService(
-    userRepository,
-    bcryptAdapter,
-    jwtTokenGenerator,
-  );
-
-  return new SignUpUserController(signUpUserService);
+  return new SignUpUserController(winstonAdapter, signUpUserService);
 };
