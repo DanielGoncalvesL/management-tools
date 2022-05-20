@@ -3,6 +3,11 @@ import { env } from '@/main/config/env';
 
 import 'reflect-metadata';
 import { createConnection, getConnection } from 'typeorm';
+import { makeWinstonAdapter } from '@/main/factories/infra';
+
+const logger = makeWinstonAdapter();
+
+console.log(env.nodeEnv);
 
 createConnection()
   .then(async () => {
@@ -14,4 +19,6 @@ createConnection()
       console.log(`Server running at http://localhost:${env.port}`),
     );
   })
-  .catch(console.error);
+  .catch(error => {
+    logger.logging({ paramToLogger: error as Error });
+  });
