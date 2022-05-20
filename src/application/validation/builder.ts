@@ -2,10 +2,11 @@ import {
   RequiredStringValidator,
   Validator,
   CompareFieldsValidator,
+  Field,
 } from '@/application/validation';
 
 type RequiredParams = { value: string; fieldName: string };
-type CompareFieldsParams = { field: string; compareField: string };
+type CompareFieldsParams = { field: Field; compareField: Field };
 
 export class ValidationBuilder {
   private constructor(private readonly validators: Validator[] = []) {}

@@ -1,15 +1,20 @@
 import { CompareFieldsError } from '@/application/errors';
 import { Validator } from '@/application/validation';
 
+export type Field = {
+  value: string;
+  name: string;
+};
+
 export class CompareFieldsValidator implements Validator {
   constructor(
-    private readonly field: string,
-    private readonly compareField: string,
+    private readonly field: Field,
+    private readonly compareField: Field,
   ) {}
 
   validate(): Error | undefined {
-    if (this.field !== this.compareField) {
-      return new CompareFieldsError(this.field, this.compareField);
+    if (this.field.value !== this.compareField.value) {
+      return new CompareFieldsError(this.field.name, this.compareField.name);
     }
   }
 }
