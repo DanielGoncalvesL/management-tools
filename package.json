@@ -6,7 +6,7 @@
     "author": "Daniel Gonçalves Lopes",
     "private": false,
     "scripts": {
-        "start": "node dist/main",
+        "start": "yarn build && node dist/main",
         "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules src/main",
         "commit": "yarn lint-staged && git-cz",
         "clean": "rimraf dist",
