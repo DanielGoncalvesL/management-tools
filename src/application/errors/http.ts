@@ -32,6 +32,13 @@ export class MinimumSizeError extends Error {
   }
 }
 
+export class InvalidParamError extends Error {
+  constructor(param: string) {
+    super(`Invalid param: ${param}`);
+    this.name = 'InvalidParamError';
+  }
+}
+
 // export class UnauthorizedError extends Error {
 //   constructor() {
 //     super('Unauthorized');

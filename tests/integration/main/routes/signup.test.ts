@@ -24,7 +24,7 @@ describe('SignupUser Routes', () => {
   describe('POST /signup', () => {
     const requestData = {
       name: 'any_name',
-      email: 'any_email',
+      email: 'any_email@email.com',
       password: 'any_password',
       passwordConfirmation: 'any_password',
     };

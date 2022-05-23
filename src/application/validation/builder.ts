@@ -4,11 +4,13 @@ import {
   CompareFieldsValidator,
   Field,
 } from '@/application/validation';
+import { EmailValidator } from '@/application/validation/email';
 import { MinimumSizeValidator } from '@/application/validation/minimun-size';
 
-type RequiredParams = { value: string; fieldName: string };
+type RequiredParams = { fields: Field[] };
 type CompareFieldsParams = { field: Field; compareField: Field };
 type MinimumSizeParams = { field: Field; min: number };
+type ValidateEmailParams = { field: Field };
 
 export class ValidationBuilder {
   private constructor(private readonly validators: Validator[] = []) {}
@@ -17,8 +19,8 @@ export class ValidationBuilder {
     return new ValidationBuilder();
   }
 
-  required({ value, fieldName }: RequiredParams): ValidationBuilder {
-    this.validators.push(new RequiredStringValidator(value, fieldName));
+  required({ fields }: RequiredParams): ValidationBuilder {
+    this.validators.push(new RequiredStringValidator(fields));
 
     return this;
   }
@@ -31,6 +33,12 @@ export class ValidationBuilder {
 
   min({ field, min }: MinimumSizeParams): ValidationBuilder {
     this.validators.push(new MinimumSizeValidator(field, min));
+
+    return this;
+  }
+
+  validateEmail({ field }: ValidateEmailParams): ValidationBuilder {
+    this.validators.push(new EmailValidator(field));
 
     return this;
   }

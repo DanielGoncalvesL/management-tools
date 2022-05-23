@@ -46,15 +46,18 @@ export class SignUpUserController extends Controller {
   }: HttpRequest): Validator[] {
     const validators = [
       ...ValidationBuilder.of()
-        .required({ value: name, fieldName: 'name' })
+        .required({
+          fields: [
+            { value: name, name: 'name' },
+            { value: email, name: 'email' },
+            { value: password, name: 'password' },
+            { value: passwordConfirmation, name: 'passwordConfirmation' },
+          ],
+        })
         .build(),
 
       ...ValidationBuilder.of()
-        .required({ value: email, fieldName: 'email' })
-        .build(),
-
-      ...ValidationBuilder.of()
-        .required({ value: password, fieldName: 'password' })
+        .validateEmail({ field: { value: email, name: 'email' } })
         .build(),
 
       ...ValidationBuilder.of()

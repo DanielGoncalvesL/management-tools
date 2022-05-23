@@ -3,7 +3,7 @@ import { RequiredStringValidator } from '@/application/validation';
 
 describe('RequiredStringValidator', () => {
   it('should return RequiredFieldError if value is empty', () => {
-    const sut = new RequiredStringValidator('', 'any_field');
+    const sut = new RequiredStringValidator([{ value: '', name: 'any_field' }]);
 
     const error = sut.validate();
 
@@ -11,7 +11,9 @@ describe('RequiredStringValidator', () => {
   });
 
   it('should return RequiredFieldError if value is null', () => {
-    const sut = new RequiredStringValidator(null as any, 'any_field');
+    const sut = new RequiredStringValidator([
+      { value: null as any, name: 'any_field' },
+    ]);
 
     const error = sut.validate();
 
@@ -19,7 +21,9 @@ describe('RequiredStringValidator', () => {
   });
 
   it('should return RequiredFieldError if value is undefined', () => {
-    const sut = new RequiredStringValidator(undefined as any, 'any_field');
+    const sut = new RequiredStringValidator([
+      { value: undefined as any, name: 'any_field' },
+    ]);
 
     const error = sut.validate();
 
@@ -27,7 +31,9 @@ describe('RequiredStringValidator', () => {
   });
 
   it('should return undefined if value is not empty', () => {
-    const sut = new RequiredStringValidator('any_value', 'any_field');
+    const sut = new RequiredStringValidator([
+      { value: 'any_value', name: 'any_field' },
+    ]);
 
     const error = sut.validate();
 

@@ -1,5 +1,6 @@
 import {
   CompareFieldsError,
+  InvalidParamError,
   MinimumSizeError,
   RequiredFieldError,
   ServerError,
@@ -65,6 +66,15 @@ describe('HttpErrors', () => {
       expect(error.message).toBe(
         `The ${errorParams.name} must be at least ${errorParams.min} characters long`,
       );
+    });
+  });
+
+  describe('InvalidParamError', () => {
+    it('should be able to return correct name and message', () => {
+      const error = new InvalidParamError('invalid_param');
+
+      expect(error.name).toBe('InvalidParamError');
+      expect(error.message).toBe(`Invalid param: invalid_param`);
     });
   });
 });

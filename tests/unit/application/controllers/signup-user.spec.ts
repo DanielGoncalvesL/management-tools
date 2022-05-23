@@ -2,6 +2,7 @@ import { SignUpUserController } from '@/application/controllers';
 import {
   CompareFieldsValidator,
   RequiredStringValidator,
+  EmailValidator,
 } from '@/application/validation';
 import { MinimumSizeValidator } from '@/application/validation/minimun-size';
 import { Logger } from '@/data/contracts/providers';
@@ -16,7 +17,7 @@ describe('SignUpUserController', () => {
   let signUpUser: MockProxy<SignUpUser>;
   const requestData = {
     name: 'any_name',
-    email: 'any_email',
+    email: 'any_email@email.com',
     password: 'any_password',
     passwordConfirmation: 'any_password',
   };
@@ -34,10 +35,16 @@ describe('SignUpUserController', () => {
   it('should build Validators correctly', async () => {
     const validators = sut.buildValidators(requestData);
 
+    const { email, name, password, passwordConfirmation } = requestData;
+
     expect(validators).toEqual([
-      new RequiredStringValidator(requestData.name, 'name'),
-      new RequiredStringValidator(requestData.email, 'email'),
-      new RequiredStringValidator(requestData.password, 'password'),
+      new RequiredStringValidator([
+        { value: name, name: 'name' },
+        { value: email, name: 'email' },
+        { value: password, name: 'password' },
+        { value: passwordConfirmation, name: 'passwordConfirmation' },
+      ]),
+      new EmailValidator({ value: email, name: 'email' }),
       new CompareFieldsValidator(
         { value: requestData.password, name: 'password' },
         {
