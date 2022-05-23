@@ -3,6 +3,7 @@ import {
   CompareFieldsValidator,
   RequiredStringValidator,
 } from '@/application/validation';
+import { MinimumSizeValidator } from '@/application/validation/minimun-size';
 import { Logger } from '@/data/contracts/providers';
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { SignUpUser } from '@/domain/features';
@@ -43,6 +44,13 @@ describe('SignUpUserController', () => {
           value: requestData.passwordConfirmation,
           name: 'passwordConfirmation',
         },
+      ),
+      new MinimumSizeValidator(
+        {
+          value: requestData.password,
+          name: 'password',
+        },
+        6,
       ),
     ]);
   });

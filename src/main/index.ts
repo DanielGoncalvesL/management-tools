@@ -7,8 +7,6 @@ import { makeWinstonAdapter } from '@/main/factories/infra';
 
 const logger = makeWinstonAdapter();
 
-console.log(env.nodeEnv);
-
 createConnection()
   .then(async () => {
     await getConnection().synchronize();

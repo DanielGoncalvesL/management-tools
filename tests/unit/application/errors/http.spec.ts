@@ -1,5 +1,6 @@
 import {
   CompareFieldsError,
+  MinimumSizeError,
   RequiredFieldError,
   ServerError,
 } from '@/application/errors';
@@ -44,6 +45,25 @@ describe('HttpErrors', () => {
       expect(error.name).toBe('CompareFieldsError');
       expect(error.message).toBe(
         `The fields ${fields.field} and ${fields.compareField} are not equals`,
+      );
+    });
+  });
+
+  describe('MinimumSizeError', () => {
+    it('should be able to return correct name and message', () => {
+      const errorParams = {
+        name: 'field',
+        min: 6,
+      };
+
+      const error = new MinimumSizeError({
+        name: errorParams.name,
+        size: errorParams.min,
+      });
+
+      expect(error.name).toBe('MinimumSizeError');
+      expect(error.message).toBe(
+        `The ${errorParams.name} must be at least ${errorParams.min} characters long`,
       );
     });
   });

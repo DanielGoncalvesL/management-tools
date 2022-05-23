@@ -48,12 +48,15 @@ export class SignUpUserController extends Controller {
       ...ValidationBuilder.of()
         .required({ value: name, fieldName: 'name' })
         .build(),
+
       ...ValidationBuilder.of()
         .required({ value: email, fieldName: 'email' })
         .build(),
+
       ...ValidationBuilder.of()
         .required({ value: password, fieldName: 'password' })
         .build(),
+
       ...ValidationBuilder.of()
         .compare({
           field: { value: password, name: 'password' },
@@ -61,6 +64,13 @@ export class SignUpUserController extends Controller {
             value: passwordConfirmation,
             name: 'passwordConfirmation',
           },
+        })
+        .build(),
+
+      ...ValidationBuilder.of()
+        .min({
+          field: { value: password, name: 'password' },
+          min: 6,
         })
         .build(),
     ];
