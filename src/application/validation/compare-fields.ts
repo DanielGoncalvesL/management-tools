@@ -1,10 +1,5 @@
 import { CompareFieldsError } from '@/application/errors';
-import { Validator } from '@/application/validation';
-
-export type Field = {
-  value: string;
-  name: string;
-};
+import { Validator, Field } from '@/application/validation';
 
 export class CompareFieldsValidator implements Validator {
   constructor(
