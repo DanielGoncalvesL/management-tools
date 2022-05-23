@@ -5,10 +5,9 @@ import {
   makeJwtTokenGenerator,
 } from '@/main/factories/infra';
 
-export const makeSignUpUserService = (): SignUpUserService => {
-  return new SignUpUserService(
+export const makeSignUpUserService = (): SignUpUserService =>
+  new SignUpUserService(
     makePgUserRepository(),
     makeBcryptAdapter(),
     makeJwtTokenGenerator(),
   );
-};

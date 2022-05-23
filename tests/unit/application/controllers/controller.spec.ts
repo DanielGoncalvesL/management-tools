@@ -14,6 +14,7 @@ class ControllerStub extends Controller {
     data: 'any_data',
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async perform(httpRequest: any): Promise<HttpResponse> {
     return this.result;
   }

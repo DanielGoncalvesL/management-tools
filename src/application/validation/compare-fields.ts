@@ -11,5 +11,7 @@ export class CompareFieldsValidator implements Validator {
     if (this.field.value !== this.compareField.value) {
       return new CompareFieldsError(this.field.name, this.compareField.name);
     }
+
+    return undefined;
   }
 }

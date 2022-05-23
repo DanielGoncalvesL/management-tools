@@ -15,5 +15,7 @@ export class RequiredStringValidator implements Validator {
         return new RequiredFieldError(field.name);
       }
     }
+
+    return undefined;
   }
 }

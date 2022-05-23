@@ -1,5 +1,3 @@
 import { BcryptAdapter } from '@/infra/crypto';
 
-export const makeBcryptAdapter = (): BcryptAdapter => {
-  return new BcryptAdapter(12);
-};
+export const makeBcryptAdapter = (): BcryptAdapter => new BcryptAdapter(12);

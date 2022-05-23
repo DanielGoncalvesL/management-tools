@@ -23,8 +23,6 @@ import { WinstonAdapter } from '@/infra/logger';
 describe('WinstonAdapter', () => {
   let sut: WinstonAdapter;
 
-  beforeAll(() => {});
-
   beforeEach(() => {
     sut = new WinstonAdapter();
   });

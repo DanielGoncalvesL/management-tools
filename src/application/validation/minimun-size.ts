@@ -8,5 +8,7 @@ export class MinimumSizeValidator implements Validator {
     if (this.text.value.length < this.min) {
       return new MinimumSizeError({ name: this.text.name, size: this.min });
     }
+
+    return undefined;
   }
 }

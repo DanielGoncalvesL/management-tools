@@ -74,7 +74,7 @@ describe('HttpErrors', () => {
       const error = new InvalidParamError('invalid_param');
 
       expect(error.name).toBe('InvalidParamError');
-      expect(error.message).toBe(`Invalid param: invalid_param`);
+      expect(error.message).toBe('Invalid param: invalid_param');
     });
   });
 });

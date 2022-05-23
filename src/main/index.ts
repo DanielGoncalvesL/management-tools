@@ -14,6 +14,7 @@ createConnection()
     const { app } = await import('@/main/config/app');
 
     app.listen(env.port, () =>
+      // eslint-disable-next-line no-console
       console.log(`Server running at http://localhost:${env.port}`),
     );
   })

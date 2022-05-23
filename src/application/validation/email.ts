@@ -11,5 +11,7 @@ export class EmailValidator implements Validator {
     if (!this.emailRegex.test(this.email.value)) {
       return new InvalidParamError(this.email.name);
     }
+
+    return undefined;
   }
 }

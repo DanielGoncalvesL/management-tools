@@ -12,7 +12,7 @@ export class JwtTokenGenerator implements TokenGenerator {
   }: generateParams): Promise<TokenGenerator.Result> {
     const expirationInSeconds = expirationInMs / 1000;
 
-    return sign({ key: key }, this.secret, {
+    return sign({ key }, this.secret, {
       expiresIn: expirationInSeconds,
     });
   }

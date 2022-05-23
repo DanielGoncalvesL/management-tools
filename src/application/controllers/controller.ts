@@ -7,15 +7,16 @@ export abstract class Controller {
 
   abstract perform(httpRequest: any): Promise<HttpResponse>;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   buildValidators(httpRequest: any): Validator[] {
     return [];
   }
 
   async handle(httpRequest: any): Promise<HttpResponse> {
-    const error = this.validate(httpRequest);
+    const validateError = this.validate(httpRequest);
 
-    if (error !== undefined) {
-      return badRequest(error);
+    if (validateError !== undefined) {
+      return badRequest(validateError);
     }
 
     try {

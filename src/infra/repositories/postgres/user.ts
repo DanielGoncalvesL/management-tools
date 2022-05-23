@@ -27,9 +27,9 @@ export class PgUserRepository
 
     const user = await pgUserRepo.save(
       pgUserRepo.create({
-        name: name,
-        email: email,
-        password: password,
+        name,
+        email,
+        password,
       }),
     );
 
@@ -40,7 +40,7 @@ export class PgUserRepository
     const pgUserRepo = this.getUserRepository();
 
     return !!(await pgUserRepo.findOne({
-      where: { email: email },
+      where: { email },
     }));
   }
 }
