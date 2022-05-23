@@ -2,9 +2,9 @@ import { IBackup } from 'pg-mem';
 import { getConnection, getRepository, Repository } from 'typeorm';
 import { validate } from 'uuid';
 
-import { PgUser } from '@/infra/repositories/postgres/entities';
+import { PgUser } from '@/infra/db/repositories/postgres/entities';
 import { makeFakeDb } from '@/tests/mocks';
-import { PgUserRepository } from '@/infra/repositories/postgres';
+import { PgUserRepository } from '@/infra/db/repositories/postgres';
 
 describe('PgUserRepository', () => {
   let sut: PgUserRepository;

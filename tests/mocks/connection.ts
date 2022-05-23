@@ -6,7 +6,9 @@ export const makeFakeDb = async (entities?: any[]): Promise<IMemoryDb> => {
 
   const connection = await db.adapters.createTypeormConnection({
     type: 'postgres',
-    entities: entities ?? ['src/infra/repositories/postgres/entities/index.ts'],
+    entities: entities ?? [
+      'src/infra/db/repositories/postgres/entities/index.ts',
+    ],
   });
 
   db.registerExtension('uuid-ossp', schema => {
