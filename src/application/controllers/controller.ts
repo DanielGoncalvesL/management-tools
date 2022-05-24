@@ -15,6 +15,8 @@ export abstract class Controller {
   async handle(httpRequest: any): Promise<HttpResponse> {
     const validateError = this.validate(httpRequest);
 
+    await this.logger.logging({ paramToLogger: 'logou' });
+
     if (validateError !== undefined) {
       return badRequest(validateError);
     }
@@ -22,9 +24,12 @@ export abstract class Controller {
     try {
       return await this.perform(httpRequest);
     } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+
       const catchError = error as Error;
 
-      this.logger.logging({ paramToLogger: catchError });
+      await this.logger.logging({ paramToLogger: catchError });
 
       return serverError(catchError);
     }

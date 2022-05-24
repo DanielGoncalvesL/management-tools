@@ -14,6 +14,7 @@ module.exports = {
     'progress',
     'dashboard',
   ],
+  htmlReporter: { baseDir: 'tests/reports/stryker.html' },
   testRunner: 'jest',
   coverageAnalysis: 'perTest',
   commandRunner: { command: 'yarn test' },

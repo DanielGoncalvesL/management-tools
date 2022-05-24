@@ -3,17 +3,22 @@ import { app } from '@/main/config/app';
 import { makeFakeDb } from '@/../tests/mocks';
 import { IBackup } from 'pg-mem';
 import { getConnection } from 'typeorm';
+import { MongoHelper } from '@/infra/db/repositories/mongo/helpers';
+import { env } from '@/main/config/env';
 
 describe('SignupUser Routes', () => {
   let backup: IBackup;
 
   beforeAll(async () => {
+    await MongoHelper.getInstance().connect(env.mongoUrl);
+
     const db = await makeFakeDb();
 
     backup = db.backup();
   });
 
   afterAll(async () => {
+    await MongoHelper.getInstance().disconnect();
     await getConnection().close();
   });
 

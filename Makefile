@@ -1,3 +1,3 @@
-start-database:
-	@docker-compose up -d postgres
+start-databases:
+	@docker-compose up -d postgres mongo
 

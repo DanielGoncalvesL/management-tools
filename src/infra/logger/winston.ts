@@ -12,12 +12,6 @@ export class WinstonAdapter implements ILogger {
       format: winston.format.combine(
         winston.format.errors({ stack: true }),
         winston.format.json(),
-        winston.format.colorize({
-          message: true,
-          level: true,
-          all: true,
-          colors: { info: 'blue', error: 'red' },
-        }),
       ),
       transports: [
         new winston.transports.File({
@@ -35,7 +29,7 @@ export class WinstonAdapter implements ILogger {
   }
   // Stryker restore all
 
-  logging({ paramToLogger }: ILogger.Params): void {
+  async logging({ paramToLogger }: ILogger.Params): Promise<void> {
     if (paramToLogger instanceof Error) {
       this.logger.error(paramToLogger);
     } else {

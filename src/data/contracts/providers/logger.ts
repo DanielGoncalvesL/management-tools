@@ -1,5 +1,5 @@
 export interface Logger {
-  logging: (params: Logger.Params) => void;
+  logging: (params: Logger.Params) => Promise<void>;
 }
 
 export namespace Logger {

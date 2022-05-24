@@ -1,11 +1,11 @@
 import { SignUpUserController } from '@/application/controllers';
-import { makeWinstonAdapter } from '@/main/factories/infra';
+import { makeMongoLogger } from '@/main/factories/infra/mongo-logger';
 import { makeSignUpUserService } from '@/main/factories/services';
 
 export const makeSignUpUserController = (): SignUpUserController => {
-  const winstonAdapter = makeWinstonAdapter();
+  const mongoLogger = makeMongoLogger();
 
   const signUpUserService = makeSignUpUserService();
 
-  return new SignUpUserController(winstonAdapter, signUpUserService);
+  return new SignUpUserController(mongoLogger, signUpUserService);
 };

@@ -18,5 +18,7 @@ module.exports = {
     '\\.ts$': 'ts-jest',
   },
   clearMocks: true,
+  preset: '@shelf/jest-mongodb',
+  watchPathIgnorePatterns: ['globalConfig'],
   // setupFiles: ['dotenv/config', './jest.ioredis.mock.js']
 };

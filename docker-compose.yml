@@ -12,13 +12,16 @@ services:
       POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD}
       POSTGRES_DB: ${POSTGRESQL_DATABASE}
       TZ: 'America/Sao_Paulo'
-    volumes:
-      - postgres-data:/postgres
-    networks:
-      - containers-network
 
-volumes:
-  postgres-data:
+  mongo:
+    container_name: mongo-container
+    image: mongo:4.2.20
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - ${MONGO_PORT}:27017
 
 networks:
   containers-network:
