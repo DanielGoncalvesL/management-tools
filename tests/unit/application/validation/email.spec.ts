@@ -14,7 +14,9 @@ describe('EmailValidator', () => {
   it('should ensure that the email regex is valid', () => {
     const sut = new EmailValidator(email);
 
-    expect(sut.emailRegex).toEqual(/\S+@\S+\.\S+/);
+    expect(sut.emailRegex).toEqual(
+      /^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+    );
   });
 
   it('should return InvalidParamError if value is not valid', () => {

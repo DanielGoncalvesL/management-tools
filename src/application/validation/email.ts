@@ -3,7 +3,8 @@ import { Validator } from '@/application/validation';
 import { Field } from '@/application/validation/field';
 
 export class EmailValidator implements Validator {
-  readonly emailRegex = /\S+@\S+\.\S+/;
+  readonly emailRegex =
+    /^[a-zA-Z0-9.!#$%&'*+=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
   constructor(private readonly email: Field) {}
 
