@@ -12,6 +12,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD}
       POSTGRES_DB: ${POSTGRESQL_DATABASE}
       TZ: 'America/Sao_Paulo'
+    networks:
+      - containers-network
 
   mongo:
     container_name: mongo-container
@@ -22,6 +24,17 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
     ports:
       - ${MONGO_PORT}:27017
+    networks:
+      - containers-network
+
+  api:
+    build: .
+    container_name: api-container
+    restart: always
+    ports:
+      - ${API_PORT}:8080
+    networks:
+      - containers-network
 
 networks:
   containers-network:
