@@ -6,139 +6,161 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  # build:
+  #   runs-on: ubuntu-latest
 
-    steps:
-    - name: Project checkout
-      uses: actions/checkout@v2
-    - name: Node.js Setup
-      uses: actions/setup-node@v2
-    - name: Installation of Node.js dependencies
-      run: yarn
-    - name: Build
-      run: yarn build
+  #   steps:
+  #   - name: Project checkout
+  #     uses: actions/checkout@v2
+  #   - name: Node.js Setup
+  #     uses: actions/setup-node@v2
+  #   - name: Installation of Node.js dependencies
+  #     run: yarn
+  #   - name: Build
+  #     run: yarn build
 
-  lint:
-    runs-on: ubuntu-18.04
+  # lint:
+  #   runs-on: ubuntu-18.04
 
-    steps:
-    - name: Project checkout
-      uses: actions/checkout@v2
-    - name: Node.js Setup
-      uses: actions/setup-node@v2
-    - name: Installation of Node.js dependencies
-      run: yarn
-    - name: Lint
-      run: yarn lint
+  #   steps:
+  #   - name: Project checkout
+  #     uses: actions/checkout@v2
+  #   - name: Node.js Setup
+  #     uses: actions/setup-node@v2
+  #   - name: Installation of Node.js dependencies
+  #     run: yarn
+  #   - name: Lint
+  #     run: yarn lint
 
-  commitlint:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: wagoid/commitlint-github-action@v4
+  # commitlint:
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #     - uses: wagoid/commitlint-github-action@v4
 
-  tests:
-    runs-on: ubuntu-18.04
+  # tests:
+  #   runs-on: ubuntu-18.04
 
-    steps:
-    - name: Project checkout
-      uses: actions/checkout@v2
-    - name: Unit and Integration Tests
-      run: make run-tests
+  #   steps:
+  #   - name: Project checkout
+  #     uses: actions/checkout@v2
+  #   - name: Unit and Integration Tests
+  #     run: make run-tests
 
-  tests-mutation:
-    runs-on: ubuntu-latest
+  # tests-mutation:
+  #   runs-on: ubuntu-latest
 
-    steps:
-    - name: Project checkout
-      uses: actions/checkout@v2
-    - name: Inject slug/short variables
-      uses: rlespinasse/github-slug-action@v3.x
-    - name: Mutation test
-      run: make run-tests-mutation
-      env:
-        STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
-        BRANCH: ${{ env.GITHUB_REF_SLUG }}
+  #   steps:
+  #   - name: Project checkout
+  #     uses: actions/checkout@v2
+  #   - name: Inject slug/short variables
+  #     uses: rlespinasse/github-slug-action@v3.x
+  #   - name: Mutation test
+  #     run: make run-tests-mutation
+  #     env:
+  #       STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
+  #       BRANCH: ${{ env.GITHUB_REF_SLUG }}
 
-  sonarcloud:
-    needs: [tests]
+  # sonarcloud:
+  #   needs: [tests]
 
-    name: SonarCloud
+  #   name: SonarCloud
 
-    runs-on: ubuntu-20.04
+  #   runs-on: ubuntu-20.04
 
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
-      - name: Download code coverage artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: codeCoverage
-          path: coverage
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #       with:
+  #         fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+  #     - name: Download code coverage artifact
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: codeCoverage
+  #         path: coverage
+  #     - name: SonarCloud Scan
+  #       uses: SonarSource/sonarcloud-github-action@master
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+    release:
+      if: github.ref == 'refs/heads/main'
+      # needs: [sonarcloud, tests-mutation]
+
+      runs-on: ubuntu-20.04
+
+      name: Release
+
+      steps:
+      - name: Project checkout
+        uses: actions/checkout@v2
+      - name: Node.js Setup
+        uses: actions/setup-node@v2
+      - name: Installation of Node.js dependencies
+        run: yarn
+      - name: Release on Docker and Github
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: npx semantic-release
 
-  push-docker-image:
-    if: github.ref == 'refs/heads/main'
-    needs: [sonarcloud, tests-mutation]
+  # push-docker-image:
+  #   if: github.ref == 'refs/heads/main'
+  #   needs: [sonarcloud, tests-mutation]
 
-    name: Push Docker image to multiple registries
-    runs-on: ubuntu-20.04
-    permissions:
-      packages: write
-      contents: read
-    steps:
-      - name: Check out the repo
-        uses: actions/checkout@v3
+  #   name: Push Docker image to multiple registries
+  #   runs-on: ubuntu-20.04
+  #   permissions:
+  #     packages: write
+  #     contents: read
+  #   steps:
+  #     - name: Check out the repo
+  #       uses: actions/checkout@v3
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+  #     - name: Log in to Docker Hub
+  #       uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+  #       with:
+  #         username: ${{ secrets.DOCKER_USERNAME }}
+  #         password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Log in to the Container registry
-        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+  #     - name: Log in to the Container registry
+  #       uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+  #       with:
+  #         registry: ghcr.io
+  #         username: ${{ github.actor }}
+  #         password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-        with:
-          images: |
-            danielgl05/management-tools
-            ghcr.io/${{ github.repository }}
+  #     - name: Extract metadata (tags, labels) for Docker
+  #       id: meta
+  #       uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+  #       with:
+  #         images: |
+  #           danielgl05/management-tools
+  #           ghcr.io/${{ github.repository }}
 
-      - name: Build and push Docker images
-        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-        with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+  #     - name: Build and push Docker images
+  #       uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+  #       with:
+  #         context: .
+  #         push: true
+  #         tags: ${{ steps.meta.outputs.tags }}
+  #         labels: ${{ steps.meta.outputs.labels }}
 
-  deploy:
-    if: github.ref == 'refs/heads/main'
-    needs: [sonarcloud, tests-mutation]
+  # deploy:
+  #   if: github.ref == 'refs/heads/main'
+  #   needs: [sonarcloud, tests-mutation]
 
-    runs-on: ubuntu-latest
+  #   runs-on: ubuntu-latest
 
-    steps:
-    - name: Project checkout
-      uses: actions/checkout@v2
-    - name: Deploy app on Heroku (https://management-tools.herokuapp.com/docs-api/)
-      uses: akhileshns/heroku-deploy@v3.12.12
-      with:
-        heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-        heroku_app_name: "management-tools"
-        heroku_email: ${{secrets.HEROKU_EMAIL}}
+  #   steps:
+  #   - name: Project checkout
+  #     uses: actions/checkout@v2
+  #   - name: Deploy app on Heroku (https://management-tools.herokuapp.com/docs-api/)
+  #     uses: akhileshns/heroku-deploy@v3.12.12
+  #     with:
+  #       heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+  #       heroku_app_name: "management-tools"
+  #       heroku_email: ${{secrets.HEROKU_EMAIL}}
