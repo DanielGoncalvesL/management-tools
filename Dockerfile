@@ -1,29 +1,17 @@
-FROM node:lts-alpine
+FROM node:16.14.2-alpine
 
-RUN mkdir -p /home/root/api/node_modules && chown -R root:root /home/root/api
-
-WORKDIR /home/root/api
+WORKDIR /home/usr/api
 
 COPY package.json yarn.* ./
 
-USER root
+RUN yarn --prod
 
-RUN yarn
+RUN yarn add -D typescript
 
-COPY --chown=root:root . .
+COPY . .
 
-RUN apk add --no-cache openssl
+ENV RUN_DOCKER=1
 
-ENV DOCKERIZE_VERSION v0.6.1
-RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
-    && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
-    && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+EXPOSE 8080
 
-RUN yarn build
-
-RUN apk update && \
-    apk add git
-
-EXPOSE 3000
-
-CMD ["yarn", "start:docker"]
+CMD ["yarn", "start"]

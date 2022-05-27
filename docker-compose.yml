@@ -1,73 +1,41 @@
-version: '3'
+version: '3.8'
 
 services:
-  server:
-    build: .
-    container_name: server
-    command: sh -c "sleep 10s && yarn start:docker"
-    volumes:
-      - .:/home/node/api
-      - /home/node/api/node_modules
-    ports:
-      - '3000:3000'
-    depends_on:
-      - postgres
-      - migrations
-    networks:
-      - teste-sozei-network
-
-  tests:
-    build: .
-    container_name: tests
-    command: sh -c "sleep 10s && yarn test"
-    volumes:
-      - .:/home/node/api
-      - /home/node/api/node_modules
-    depends_on:
-      - postgres
-      - migrations
-    networks:
-      - teste-sozei-network
-
-  tests-mutation:
-    environment:
-      - STRYKER_DASHBOARD_API_KEY
-      - BRANCH
-    build: .
-    container_name: tests-mutation
-    command: sh -c "sleep 10s && yarn test:mutation"
-    depends_on:
-      - postgres
-      - migrations
-    volumes:
-      - ./reports/mutation:/home/root/api/reports/mutation
-    networks:
-      - teste-sozei-network
-
   postgres:
-    image: postgres:13.2-alpine
-    container_name: postgres
+    image: postgres:14.2-alpine
+    container_name: postgres-container
+    restart: always
+    ports:
+      - ${POSTGRESQL_PORT}:5432
     environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "docker"
-      POSTGRES_DB: "postgres"
-    volumes:
-      - postgres-data:/data
+      POSTGRES_USER: ${POSTGRESQL_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRESQL_PASSWORD}
+      POSTGRES_DB: ${POSTGRESQL_DATABASE}
+      TZ: 'America/Sao_Paulo'
     networks:
-      - teste-sozei-network
+      - containers-network
 
-  migrations:
+  mongo:
+    container_name: mongo-container
+    image: mongo:4.2.20
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - ${MONGO_PORT}:27017
+    networks:
+      - containers-network
+
+  api:
     build: .
-    command: sh -c "dockerize -wait tcp://postgres:5432 -timeout 300s -wait-retry-interval 1s && yarn typeorm migration:run"
-    container_name: migrations
-    depends_on:
-      - postgres
+    container_name: api-container
+    restart: always
+    ports:
+      - ${API_PORT}:8080
     networks:
-      - teste-sozei-network
-
-volumes:
-  postgres-data:
+      - containers-network
 
 networks:
-  teste-sozei-network:
+  containers-network:
     driver: bridge

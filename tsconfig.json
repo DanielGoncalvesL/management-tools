@@ -1,32 +1,25 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "outDir": "./dist",
-    "rootDir": "./",
-    "strict": true,
-    "strictPropertyInitialization": false,
-    "baseUrl": "./src",
-    "allowJs": true,
-    "paths": {
-    "@modules/*": ["modules/*"],
-    "@config/*": ["config/*"],
-    "@shared/*": ["shared/*"]
-    },
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
+    "incremental": true,
+    "outDir": "dist",
+    "rootDirs": ["src", "tests"],
+    "target": "es2022",
+    "sourceMap": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "allowUnreachableCode": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"],
+      "@/tests/*": ["../tests/*"]
+    },
+    "strict": true,
+    "noImplicitOverride": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
-  "include": [
-    "./src/**/*.ts"
-  ],
-  "exclude": [
-      "./test/**/*.spec.ts"
-  ]
+  "include": ["src", "tests"]
 }

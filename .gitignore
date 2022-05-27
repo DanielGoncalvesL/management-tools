@@ -4,10 +4,14 @@
 /temp/*
 !/temp/.gitkeep
 /dist
+/mongo-data
 
 yarn-error.log
 coverage
 .env
+error.log
+info.log
+globalConfig.json
 
 # stryker temp files
 .stryker-tmp
