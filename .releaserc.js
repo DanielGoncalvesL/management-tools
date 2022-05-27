@@ -17,23 +17,24 @@ module.exports = {
     ['@semantic-release/exec', {
       prepareCmd: 'docker build -t danielgl05/management-tools . && yarn build'
     }],
+    ['@semantic-release/npm', {
+      npmPublish: false,
+      tarballDir: 'dist',
+    }],
     ['@semantic-release/github', {
-      assets: ['dist/*.js', './*', '!src/**', '!tests/**'],
+      assets: ['dist/*.tgz'],
       releasedLabels: [
         'released on @${nextRelease.channel}',
         'released on ${nextRelease.gitTag}'
       ]
     }],
-    ['@semantic-release/npm', {
-      prepare: true,
-      publish: false
-    }],
     ['semantic-release-docker', {
       name: 'danielgl05/management-tools'
     }],
     ['semantic-release-heroku', {
+      branches: ['main'],
       name: 'management-tools',
-      npmVersion: true
+      npmVersion: false
     }]
   ]
 }
