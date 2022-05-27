@@ -4,7 +4,7 @@ import { env } from '@/main/config/env';
 import { getConnection } from 'typeorm';
 
 export const connectDbs = async () => {
-  await Promise.allSettled([
+  await Promise.all([
     MongoHelper.getInstance().connect(env.mongoUrl),
     PgConnection.getInstance()
       .connect()
