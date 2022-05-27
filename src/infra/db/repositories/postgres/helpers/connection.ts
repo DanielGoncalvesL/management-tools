@@ -11,9 +11,6 @@ export class PgConnection {
 
   private connection?: Connection;
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  private constructor() {}
-
   static getInstance(): PgConnection {
     if (PgConnection.instance === undefined)
       PgConnection.instance = new PgConnection();

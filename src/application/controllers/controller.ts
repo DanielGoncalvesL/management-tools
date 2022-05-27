@@ -15,8 +15,6 @@ export abstract class Controller {
   async handle(httpRequest: any): Promise<HttpResponse> {
     const validateError = this.validate(httpRequest);
 
-    await this.logger.logging({ paramToLogger: 'logou' });
-
     if (validateError !== undefined) {
       return badRequest(validateError);
     }

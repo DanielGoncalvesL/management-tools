@@ -59,7 +59,7 @@ jobs:
         path: tests/coverage/lcov.info
 
   tests-mutation:
-    needs: [build, lint]
+    needs: [tests]
 
     runs-on: ubuntu-20.04
 

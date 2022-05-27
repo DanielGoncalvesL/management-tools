@@ -6,7 +6,7 @@ module.exports = {
     },
     autoStart: false,
     instance: {
-      dbName: 'jest'
+      dbName: 'jest',
     },
   },
 };
