@@ -85,33 +85,33 @@ jobs:
   #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
   #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-    # release:
-    #   if: github.ref == 'refs/heads/main'
-    #   # needs: [sonarcloud, tests-mutation]
+    release:
+      if: github.ref == 'refs/heads/main'
+      # needs: [sonarcloud, tests-mutation]
 
-    #   runs-on: ubuntu-20.04
+      runs-on: ubuntu-20.04
 
-    #   name: Release
+      name: Release
 
-    #   steps:
-    #   - name: Project checkout
-    #     uses: actions/checkout@v2
-    #   - name: Node.js Setup
-    #     uses: actions/setup-node@v2
-    #   - name: Installation of Node.js dependencies
-    #     run: yarn
-    #   - name: Release on Docker and Github
-    #     env:
-    #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-    #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-    #       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-    #       HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
-    #     run: npx semantic-release
+      steps:
+      - name: Project checkout
+        uses: actions/checkout@v2
+      - name: Node.js Setup
+        uses: actions/setup-node@v2
+      - name: Installation of Node.js dependencies
+        run: yarn
+      - name: Release on Docker and Github
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
+        run: npx semantic-release
 
     push-github-package:
       if: github.ref == 'refs/heads/main'
-      # needs: [release]
+      needs: [release]
 
       name: Push github package
       runs-on: ubuntu-20.04
@@ -134,15 +134,10 @@ jobs:
           uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
           with:
             images: ghcr.io/${{ github.repository }}
-
-        - name: Set release version
-          env:
-            GITHUB_CONTEXT: ${{ toJson(github) }}
-          run: echo "$GITHUB_CONTEXT"
-        # - name: Build and push Docker image
-        #   uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
-        #   with:
-        #     context: .
-        #     push: true
-        #     tags: ${{ steps.meta.outputs.tags }}
-        #     labels: ${{ steps.meta.outputs.labels }}
+        - name: Build and push Docker image
+          uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+          with:
+            context: .
+            push: true
+            tags: ${{ steps.meta.outputs.tags }}
+            labels: ${{ steps.meta.outputs.labels }}
