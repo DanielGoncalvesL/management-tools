@@ -73,7 +73,7 @@ describe('SignUpUserController', () => {
     expect(signUpUser.perform).toHaveBeenCalledTimes(1);
   });
 
-  it('should return 401 if signup fails', async () => {
+  it('should return 400 if signup fails', async () => {
     signUpUser.perform.mockResolvedValueOnce(new EmailAlreadyUseError());
 
     const httpResponse = await sut.handle(requestData);
