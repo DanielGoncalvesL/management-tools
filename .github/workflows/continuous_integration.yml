@@ -31,8 +31,16 @@ jobs:
       - name: Lint
         run: yarn lint
 
+  commitlint:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: wagoid/commitlint-github-action@v4
+
   tests:
-    needs: [build, lint]
+    needs: [build, lint, commitlint]
 
     runs-on: ubuntu-20.04
 
@@ -75,7 +83,7 @@ jobs:
           BRANCH: ${{ env.GITHUB_REF_SLUG }}
 
   sonarcloud:
-    needs: [tests, tests-mutation]
+    needs: [tests]
 
     name: SonarCloud
 
@@ -98,7 +106,7 @@ jobs:
 
   push-docker-image:
     if: github.ref == 'refs/heads/main'
-    needs: [sonarcloud]
+    needs: [sonarcloud, tests-mutation]
 
     name: Push Docker image to multiple registries
     runs-on: ubuntu-20.04
@@ -140,7 +148,7 @@ jobs:
 
   deploy:
     if: github.ref == 'refs/heads/main'
-    needs: [sonarcloud]
+    needs: [sonarcloud, tests-mutation]
 
     runs-on: ubuntu-20.04
 
