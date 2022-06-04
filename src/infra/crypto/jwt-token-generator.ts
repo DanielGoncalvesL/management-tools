@@ -1,5 +1,5 @@
 import { sign } from 'jsonwebtoken';
-import { TokenGenerator } from '@/data/contracts/providers';
+import { TokenGenerator } from '@/domain/contracts/providers';
 
 type generateParams = TokenGenerator.Params;
 

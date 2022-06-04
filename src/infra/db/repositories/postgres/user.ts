@@ -1,7 +1,7 @@
 import {
   CheckUserByEmailRepository,
   CreateUserRepository,
-} from '@/data/contracts/repositories';
+} from '@/domain/contracts/repositories';
 import { getRepository, Repository } from 'typeorm';
 import { PgUser } from './entities';
 

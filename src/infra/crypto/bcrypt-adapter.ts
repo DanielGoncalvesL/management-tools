@@ -1,4 +1,4 @@
-import { Hasher } from '@/data/contracts/providers';
+import { Hasher } from '@/domain/contracts/providers';
 import bcrypt from 'bcrypt';
 
 export class BcryptAdapter implements Hasher {

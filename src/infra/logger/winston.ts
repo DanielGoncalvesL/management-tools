@@ -1,4 +1,4 @@
-import { Logger as ILogger } from '@/data/contracts/providers';
+import { Logger as ILogger } from '@/domain/contracts/providers';
 import { env } from '@/main/config/env';
 import winston, { Logger } from 'winston';
 

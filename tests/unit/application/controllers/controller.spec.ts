@@ -3,7 +3,7 @@ import { ServerError } from '@/application/errors';
 import { ValidationComposite } from '@/application/validation';
 import { mocked } from 'jest-mock';
 import { HttpResponse } from '@/application/helpers';
-import { Logger } from '@/data/contracts/providers';
+import { Logger } from '@/domain/contracts/providers';
 import { mock } from 'jest-mock-extended';
 
 jest.mock('@/application/validation/composite');

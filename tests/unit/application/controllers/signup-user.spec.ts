@@ -5,7 +5,7 @@ import {
   EmailValidator,
 } from '@/application/validation';
 import { MinimumSizeValidator } from '@/application/validation/minimun-size';
-import { Logger } from '@/data/contracts/providers';
+import { Logger } from '@/domain/contracts/providers';
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { SignUpUser } from '@/domain/features';
 import { AccessToken } from '@/domain/models/access-token';

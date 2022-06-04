@@ -1,4 +1,4 @@
-import { Logger } from '@/data/contracts/providers';
+import { Logger } from '@/domain/contracts/providers';
 import { MongoHelper } from '@/infra/db/repositories/mongo/helpers';
 
 export class MongoLoggerRepository implements Logger {

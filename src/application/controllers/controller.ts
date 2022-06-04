@@ -1,6 +1,6 @@
 import { badRequest, HttpResponse, serverError } from '@/application/helpers';
 import { ValidationComposite, Validator } from '@/application/validation';
-import { Logger } from '@/data/contracts/providers';
+import { Logger } from '@/domain/contracts/providers';
 
 export abstract class Controller {
   constructor(private readonly logger: Logger) {}

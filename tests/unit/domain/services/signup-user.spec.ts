@@ -1,12 +1,12 @@
 import {
   CheckUserByEmailRepository,
   CreateUserRepository,
-} from '@/data/contracts/repositories';
-import { SignUpUserService } from '@/data/services';
+} from '@/domain/contracts/repositories';
+import { SignUpUserService } from '@/domain/services';
 import { EmailAlreadyUseError } from '@/domain/errors';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { throwError } from '@/tests/mocks';
-import { Hasher, TokenGenerator } from '@/data/contracts/providers';
+import { Hasher, TokenGenerator } from '@/domain/contracts/providers';
 import { AccessToken } from '@/domain/models/access-token';
 
 describe('SignUpUserService', () => {

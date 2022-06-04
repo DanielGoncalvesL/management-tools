@@ -3,7 +3,7 @@ import { AccessToken } from '@/domain/models/access-token';
 import { badRequest, HttpResponse, ok } from '@/application/helpers';
 import { ValidationBuilder, Validator } from '@/application/validation';
 import { Controller } from '@/application/controllers';
-import { Logger } from '@/data/contracts/providers';
+import { Logger } from '@/domain/contracts/providers';
 
 type HttpRequest = {
   name: string;

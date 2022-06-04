@@ -3,8 +3,8 @@ import { SignUpUser } from '@/domain/features';
 import {
   CheckUserByEmailRepository,
   CreateUserRepository,
-} from '@/data/contracts/repositories';
-import { Hasher, TokenGenerator } from '@/data/contracts/providers';
+} from '@/domain/contracts/repositories';
+import { Hasher, TokenGenerator } from '@/domain/contracts/providers';
 import { AccessToken } from '@/domain/models/access-token';
 
 type Params = SignUpUser.Params;

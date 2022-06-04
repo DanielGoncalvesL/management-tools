@@ -1,4 +1,4 @@
-import { SignUpUserService } from '@/data/services';
+import { SignUpUserService } from '@/domain/services';
 import {
   makePgUserRepository,
   makeBcryptAdapter,
