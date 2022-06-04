@@ -1,9 +1,9 @@
-import { SignUpUser } from '@/domain/features';
 import { AccessToken } from '@/domain/entities/access-token';
+import { Logger } from '@/domain/contracts/providers';
+import { SignUpUser } from '@/domain/use-cases';
 import { badRequest, HttpResponse, ok } from '@/application/helpers';
 import { ValidationBuilder, Validator } from '@/application/validation';
 import { Controller } from '@/application/controllers';
-import { Logger } from '@/domain/contracts/providers';
 
 type HttpRequest = {
   name: string;
@@ -24,7 +24,7 @@ export class SignUpUserController extends Controller {
     name,
     password,
   }: HttpRequest): Promise<HttpResponse<Model>> {
-    const accessToken = await this.signUpUser.perform({
+    const accessToken = await this.signUpUser({
       email,
       name,
       password,

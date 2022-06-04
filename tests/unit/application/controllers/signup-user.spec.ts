@@ -7,14 +7,13 @@ import {
 import { MinimumSizeValidator } from '@/application/validation/minimun-size';
 import { Logger } from '@/domain/contracts/providers';
 import { EmailAlreadyUseError } from '@/domain/entities/errors';
-import { SignUpUser } from '@/domain/features';
 import { AccessToken } from '@/domain/entities/access-token';
 import { mock, MockProxy } from 'jest-mock-extended';
 
 describe('SignUpUserController', () => {
   let sut: SignUpUserController;
   let logger: MockProxy<Logger>;
-  let signUpUser: MockProxy<SignUpUser>;
+  let signUpUser: jest.Mock;
   const requestData = {
     name: 'any_name',
     email: 'any_email@email.com',
@@ -24,8 +23,8 @@ describe('SignUpUserController', () => {
 
   beforeAll(() => {
     logger = mock();
-    signUpUser = mock();
-    signUpUser.perform.mockResolvedValue(new AccessToken('any_token'));
+    signUpUser = jest.fn();
+    signUpUser.mockResolvedValue(new AccessToken('any_token'));
   });
 
   beforeEach(() => {
@@ -65,16 +64,16 @@ describe('SignUpUserController', () => {
   it('should call SignUpUser with correct params', async () => {
     await sut.handle(requestData);
 
-    expect(signUpUser.perform).toHaveBeenCalledWith({
+    expect(signUpUser).toHaveBeenCalledWith({
       name: requestData.name,
       email: requestData.email,
       password: requestData.password,
     });
-    expect(signUpUser.perform).toHaveBeenCalledTimes(1);
+    expect(signUpUser).toHaveBeenCalledTimes(1);
   });
 
   it('should return 400 if signup fails', async () => {
-    signUpUser.perform.mockResolvedValueOnce(new EmailAlreadyUseError());
+    signUpUser.mockResolvedValueOnce(new EmailAlreadyUseError());
 
     const httpResponse = await sut.handle(requestData);
 

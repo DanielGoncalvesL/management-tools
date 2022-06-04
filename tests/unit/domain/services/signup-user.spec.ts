@@ -2,20 +2,20 @@ import {
   CheckUserByEmailRepository,
   CreateUserRepository,
 } from '@/domain/contracts/repositories';
-import { SignUpUserUseCase } from '@/domain/use-cases';
+import { setupSignUpUser, SignUpUser } from '@/domain/use-cases';
 import { EmailAlreadyUseError } from '@/domain/entities/errors';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { throwError } from '@/tests/mocks';
 import { Hasher, TokenGenerator } from '@/domain/contracts/providers';
 import { AccessToken } from '@/domain/entities/access-token';
 
-describe('SignUpUserUseCase', () => {
+describe('SignUpUser', () => {
   let userRepository: MockProxy<
     CheckUserByEmailRepository & CreateUserRepository
   >;
   let hasher: MockProxy<Hasher>;
   let tokenGenerator: MockProxy<TokenGenerator>;
-  let sut: SignUpUserUseCase;
+  let sut: SignUpUser;
 
   const userDatas = {
     name: 'any_name',
@@ -39,11 +39,11 @@ describe('SignUpUserUseCase', () => {
 
     tokenGenerator.generateToken.mockResolvedValue(generateToken);
 
-    sut = new SignUpUserUseCase(userRepository, hasher, tokenGenerator);
+    sut = setupSignUpUser(userRepository, hasher, tokenGenerator);
   });
 
   it('should call CheckUserByEmailRepository with correct params', async () => {
-    await sut.perform(userDatas);
+    await sut(userDatas);
 
     expect(userRepository.checkByEmail).toHaveBeenCalledWith({
       email: 'any_email',
@@ -54,7 +54,7 @@ describe('SignUpUserUseCase', () => {
   it('should return EmailAlreadyUseError when CheckUserByEmailRepository returns data', async () => {
     userRepository.checkByEmail.mockResolvedValueOnce(true);
 
-    const signUpResult = await sut.perform(userDatas);
+    const signUpResult = await sut(userDatas);
 
     expect(signUpResult).toEqual(new EmailAlreadyUseError());
   });
@@ -62,13 +62,13 @@ describe('SignUpUserUseCase', () => {
   it('should throw if CheckUserByEmailRepository throws', async () => {
     userRepository.checkByEmail.mockImplementationOnce(throwError);
 
-    const promise = sut.perform(userDatas);
+    const promise = sut(userDatas);
 
     await expect(promise).rejects.toThrow();
   });
 
   it('should call Hasher with correct params', async () => {
-    await sut.perform(userDatas);
+    await sut(userDatas);
 
     expect(hasher.hash).toBeCalledWith({ plaintext: userDatas.password });
     expect(hasher.hash).toHaveBeenCalledTimes(1);
@@ -77,13 +77,13 @@ describe('SignUpUserUseCase', () => {
   it('should throw if Hasher throws', async () => {
     hasher.hash.mockImplementationOnce(throwError);
 
-    const promise = sut.perform(userDatas);
+    const promise = sut(userDatas);
 
     await expect(promise).rejects.toThrow();
   });
 
   it('should call CreateUserRepository with correct params', async () => {
-    await sut.perform(userDatas);
+    await sut(userDatas);
 
     expect(userRepository.createUser).toHaveBeenCalledWith({
       name: userDatas.name,
@@ -96,13 +96,13 @@ describe('SignUpUserUseCase', () => {
   it('should throw if CreateUserRepository throws', async () => {
     userRepository.createUser.mockImplementationOnce(throwError);
 
-    const promise = sut.perform(userDatas);
+    const promise = sut(userDatas);
 
     await expect(promise).rejects.toThrow();
   });
 
   it('should call TokenGenerator with correct params', async () => {
-    await sut.perform(userDatas);
+    await sut(userDatas);
 
     expect(tokenGenerator.generateToken).toHaveBeenCalledWith({
       key: 'any_id',
@@ -114,13 +114,13 @@ describe('SignUpUserUseCase', () => {
   it('should throw if TokenGenerator throws', async () => {
     tokenGenerator.generateToken.mockImplementationOnce(throwError);
 
-    const promise = sut.perform(userDatas);
+    const promise = sut(userDatas);
 
     await expect(promise).rejects.toThrow();
   });
 
   it('should call TokenGenerator with correct params', async () => {
-    const signUpResult = await sut.perform(userDatas);
+    const signUpResult = await sut(userDatas);
 
     expect(signUpResult).toEqual(new AccessToken(generateToken));
   });

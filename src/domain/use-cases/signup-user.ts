@@ -1,5 +1,4 @@
 import { EmailAlreadyUseError } from '@/domain/entities/errors';
-import { SignUpUser } from '@/domain/features';
 import {
   CheckUserByEmailRepository,
   CreateUserRepository,
@@ -7,19 +6,22 @@ import {
 import { Hasher, TokenGenerator } from '@/domain/contracts/providers';
 import { AccessToken } from '@/domain/entities/access-token';
 
-type Params = SignUpUser.Params;
-type Result = SignUpUser.Result;
+type Setup = (
+  userRepository: CheckUserByEmailRepository & CreateUserRepository,
+  hasher: Hasher,
+  tokenGenerator: TokenGenerator,
+) => SignUpUser;
 
-export class SignUpUserUseCase implements SignUpUser {
-  constructor(
-    private readonly userRepository: CheckUserByEmailRepository &
-      CreateUserRepository,
-    private readonly hasher: Hasher,
-    private readonly tokenGenerator: TokenGenerator,
-  ) {}
+export type SignUpUser = (params: {
+  email: string;
+  name: string;
+  password: string;
+}) => Promise<AccessToken | EmailAlreadyUseError>;
 
-  async perform({ email, name, password }: Params): Promise<Result> {
-    const userExists = await this.userRepository.checkByEmail({
+export const setupSignUpUser: Setup =
+  (userRepository, hasher, tokenGenerator) =>
+  async ({ email, name, password }) => {
+    const userExists = await userRepository.checkByEmail({
       email,
     });
 
@@ -27,19 +29,18 @@ export class SignUpUserUseCase implements SignUpUser {
       return new EmailAlreadyUseError();
     }
 
-    const hashedPassword = await this.hasher.hash({ plaintext: password });
+    const hashedPassword = await hasher.hash({ plaintext: password });
 
-    const { id } = await this.userRepository.createUser({
+    const { id } = await userRepository.createUser({
       email,
       name,
       password: hashedPassword,
     });
 
-    const accessToken = await this.tokenGenerator.generateToken({
+    const accessToken = await tokenGenerator.generateToken({
       key: id,
       expirationInMs: AccessToken.expirationInMs,
     });
 
     return new AccessToken(accessToken);
-  }
-}
+  };
