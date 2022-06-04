@@ -2,20 +2,20 @@ import {
   CheckUserByEmailRepository,
   CreateUserRepository,
 } from '@/domain/contracts/repositories';
-import { SignUpUserService } from '@/domain/services';
-import { EmailAlreadyUseError } from '@/domain/errors';
+import { SignUpUserUseCase } from '@/domain/use-cases';
+import { EmailAlreadyUseError } from '@/domain/entities/errors';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { throwError } from '@/tests/mocks';
 import { Hasher, TokenGenerator } from '@/domain/contracts/providers';
-import { AccessToken } from '@/domain/models/access-token';
+import { AccessToken } from '@/domain/entities/access-token';
 
-describe('SignUpUserService', () => {
+describe('SignUpUserUseCase', () => {
   let userRepository: MockProxy<
     CheckUserByEmailRepository & CreateUserRepository
   >;
   let hasher: MockProxy<Hasher>;
   let tokenGenerator: MockProxy<TokenGenerator>;
-  let sut: SignUpUserService;
+  let sut: SignUpUserUseCase;
 
   const userDatas = {
     name: 'any_name',
@@ -39,7 +39,7 @@ describe('SignUpUserService', () => {
 
     tokenGenerator.generateToken.mockResolvedValue(generateToken);
 
-    sut = new SignUpUserService(userRepository, hasher, tokenGenerator);
+    sut = new SignUpUserUseCase(userRepository, hasher, tokenGenerator);
   });
 
   it('should call CheckUserByEmailRepository with correct params', async () => {

@@ -1,15 +1,16 @@
-import { EmailAlreadyUseError } from '@/domain/errors';
+import { EmailAlreadyUseError } from '@/domain/entities/errors';
 import { SignUpUser } from '@/domain/features';
 import {
   CheckUserByEmailRepository,
   CreateUserRepository,
 } from '@/domain/contracts/repositories';
 import { Hasher, TokenGenerator } from '@/domain/contracts/providers';
-import { AccessToken } from '@/domain/models/access-token';
+import { AccessToken } from '@/domain/entities/access-token';
 
 type Params = SignUpUser.Params;
 type Result = SignUpUser.Result;
-export class SignUpUserService implements SignUpUser {
+
+export class SignUpUserUseCase implements SignUpUser {
   constructor(
     private readonly userRepository: CheckUserByEmailRepository &
       CreateUserRepository,

@@ -1,11 +1,11 @@
 import { SignUpUserController } from '@/application/controllers';
 import { makeMongoLogger } from '@/main/factories/infra/mongo-logger';
-import { makeSignUpUserService } from '@/main/factories/services';
+import { makeSignUpUserUseCase } from '@/main/factories/use-cases';
 
 export const makeSignUpUserController = (): SignUpUserController => {
   const mongoLogger = makeMongoLogger();
 
-  const signUpUserService = makeSignUpUserService();
+  const signUpUserUseCase = makeSignUpUserUseCase();
 
-  return new SignUpUserController(mongoLogger, signUpUserService);
+  return new SignUpUserController(mongoLogger, signUpUserUseCase);
 };

@@ -1,12 +1,12 @@
-import { SignUpUserService } from '@/domain/services';
+import { SignUpUserUseCase } from '@/domain/use-cases';
 import {
   makePgUserRepository,
   makeBcryptAdapter,
   makeJwtTokenGenerator,
 } from '@/main/factories/infra';
 
-export const makeSignUpUserService = (): SignUpUserService =>
-  new SignUpUserService(
+export const makeSignUpUserUseCase = (): SignUpUserUseCase =>
+  new SignUpUserUseCase(
     makePgUserRepository(),
     makeBcryptAdapter(),
     makeJwtTokenGenerator(),

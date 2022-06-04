@@ -1,5 +1,5 @@
 import { SignUpUser } from '@/domain/features';
-import { AccessToken } from '@/domain/models/access-token';
+import { AccessToken } from '@/domain/entities/access-token';
 import { badRequest, HttpResponse, ok } from '@/application/helpers';
 import { ValidationBuilder, Validator } from '@/application/validation';
 import { Controller } from '@/application/controllers';

@@ -1,5 +1,5 @@
-import { EmailAlreadyUseError } from '@/domain/errors';
-import { AccessToken } from '../models/access-token';
+import { EmailAlreadyUseError } from '@/domain/entities/errors';
+import { AccessToken } from '../entities/access-token';
 
 export interface SignUpUser {
   perform: (params: SignUpUser.Params) => Promise<SignUpUser.Result>;

@@ -6,9 +6,9 @@ import {
 } from '@/application/validation';
 import { MinimumSizeValidator } from '@/application/validation/minimun-size';
 import { Logger } from '@/domain/contracts/providers';
-import { EmailAlreadyUseError } from '@/domain/errors';
+import { EmailAlreadyUseError } from '@/domain/entities/errors';
 import { SignUpUser } from '@/domain/features';
-import { AccessToken } from '@/domain/models/access-token';
+import { AccessToken } from '@/domain/entities/access-token';
 import { mock, MockProxy } from 'jest-mock-extended';
 
 describe('SignUpUserController', () => {

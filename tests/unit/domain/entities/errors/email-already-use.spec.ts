@@ -1,4 +1,4 @@
-import { EmailAlreadyUseError } from '@/domain/errors';
+import { EmailAlreadyUseError } from '@/domain/entities/errors';
 
 describe('EmailAlreadyUseError', () => {
   it('should be able to return correct name and message', () => {
