@@ -1,4 +1,3 @@
-import { AccessToken } from '@/domain/entities/access-token';
 import { Logger } from '@/domain/contracts/providers';
 import { SignUpUser } from '@/domain/use-cases';
 import { badRequest, HttpResponse, ok } from '@/application/helpers';
@@ -24,18 +23,17 @@ export class SignUpUserController extends Controller {
     name,
     password,
   }: HttpRequest): Promise<HttpResponse<Model>> {
-    const accessToken = await this.signUpUser({
-      email,
-      name,
-      password,
-    });
+    try {
+      const { accessToken } = await this.signUpUser({
+        email,
+        name,
+        password,
+      });
 
-    if (accessToken instanceof AccessToken) {
-      return ok({ accessToken: accessToken.value });
+      return ok({ accessToken });
+    } catch (error) {
+      return badRequest(error as Error);
     }
-    const error = accessToken;
-
-    return badRequest(error);
   }
 
   override buildValidators({

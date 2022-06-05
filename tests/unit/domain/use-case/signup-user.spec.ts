@@ -51,12 +51,12 @@ describe('SignUpUser', () => {
     expect(userRepository.checkByEmail).toHaveBeenCalledTimes(1);
   });
 
-  it('should return EmailAlreadyUseError when CheckUserByEmailRepository returns data', async () => {
+  it('should throw EmailAlreadyUseError when CheckUserByEmailRepository returns data', async () => {
     userRepository.checkByEmail.mockResolvedValueOnce(true);
 
-    const signUpResult = await sut(userDatas);
+    const promise = sut(userDatas);
 
-    expect(signUpResult).toEqual(new EmailAlreadyUseError());
+    await expect(promise).rejects.toThrow(new EmailAlreadyUseError());
   });
 
   it('should throw if CheckUserByEmailRepository throws', async () => {
@@ -122,6 +122,6 @@ describe('SignUpUser', () => {
   it('should call TokenGenerator with correct params', async () => {
     const signUpResult = await sut(userDatas);
 
-    expect(signUpResult).toEqual(new AccessToken(generateToken));
+    expect(signUpResult).toEqual({ accessToken: generateToken });
   });
 });

@@ -16,7 +16,7 @@ export type SignUpUser = (params: {
   email: string;
   name: string;
   password: string;
-}) => Promise<AccessToken | EmailAlreadyUseError>;
+}) => Promise<{ accessToken: string }>;
 
 export const setupSignUpUser: Setup =
   (userRepository, hasher, tokenGenerator) =>
@@ -26,7 +26,7 @@ export const setupSignUpUser: Setup =
     });
 
     if (userExists) {
-      return new EmailAlreadyUseError();
+      throw new EmailAlreadyUseError();
     }
 
     const hashedPassword = await hasher.hash({ plaintext: password });
@@ -42,5 +42,5 @@ export const setupSignUpUser: Setup =
       expirationInMs: AccessToken.expirationInMs,
     });
 
-    return new AccessToken(accessToken);
+    return { accessToken };
   };

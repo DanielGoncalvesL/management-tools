@@ -7,7 +7,6 @@ import {
 import { MinimumSizeValidator } from '@/application/validation/minimun-size';
 import { Logger } from '@/domain/contracts/providers';
 import { EmailAlreadyUseError } from '@/domain/entities/errors';
-import { AccessToken } from '@/domain/entities/access-token';
 import { mock, MockProxy } from 'jest-mock-extended';
 
 describe('SignUpUserController', () => {
@@ -24,7 +23,7 @@ describe('SignUpUserController', () => {
   beforeAll(() => {
     logger = mock();
     signUpUser = jest.fn();
-    signUpUser.mockResolvedValue(new AccessToken('any_token'));
+    signUpUser.mockResolvedValue({ accessToken: 'any_token' });
   });
 
   beforeEach(() => {
@@ -73,7 +72,7 @@ describe('SignUpUserController', () => {
   });
 
   it('should return 400 if signup fails', async () => {
-    signUpUser.mockResolvedValueOnce(new EmailAlreadyUseError());
+    signUpUser.mockRejectedValueOnce(new EmailAlreadyUseError());
 
     const httpResponse = await sut.handle(requestData);
 
