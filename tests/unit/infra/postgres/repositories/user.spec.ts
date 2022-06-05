@@ -1,26 +1,33 @@
 import { IBackup } from 'pg-mem';
-import { getConnection, getRepository, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { validate } from 'uuid';
 
 import { PgUser } from '@/infra/db/postgres/entities';
 import { makeFakeDb } from '@/tests/mocks';
-import { PgUserRepository } from '@/infra/db/postgres/repositories';
+import {
+  PgUserRepository,
+  PgRepository,
+} from '@/infra/db/postgres/repositories';
+import { PgConnection } from '@/infra/db/postgres/helpers';
 
 describe('PgUserRepository', () => {
   let sut: PgUserRepository;
+  let connection: PgConnection;
   let pgUserRepo: Repository<PgUser>;
   let backup: IBackup;
 
   beforeAll(async () => {
+    connection = PgConnection.getInstance();
+
     const db = await makeFakeDb();
 
     backup = db.backup();
 
-    pgUserRepo = getRepository(PgUser);
+    pgUserRepo = connection.getRepository(PgUser);
   });
 
   afterAll(async () => {
-    await getConnection().close();
+    await connection.disconnect();
   });
 
   beforeEach(() => {
@@ -30,6 +37,10 @@ describe('PgUserRepository', () => {
   });
 
   describe('CheckUserByEmailRepository', () => {
+    it('should extend PgRepository', async () => {
+      expect(sut).toBeInstanceOf(PgRepository);
+    });
+
     it('should call findOne with correct params', async () => {
       const findOneSpy = jest.spyOn(pgUserRepo, 'findOne');
 

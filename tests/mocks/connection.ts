@@ -1,3 +1,4 @@
+import { PgConnection } from '@/infra/db/postgres/helpers';
 import { IMemoryDb, DataType, newDb } from 'pg-mem';
 import { v4 } from 'uuid';
 
@@ -21,6 +22,8 @@ export const makeFakeDb = async (entities?: any[]): Promise<IMemoryDb> => {
   db.public.query('create extension "uuid-ossp"; select uuid_generate_v4();');
 
   await connection.synchronize();
+
+  await PgConnection.getInstance().connect();
 
   return db;
 };

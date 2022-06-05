@@ -5,13 +5,19 @@ import {
   getConnectionManager,
   getRepository,
 } from 'typeorm';
-import { PgConnection } from '@/infra/db/postgres/helpers';
-import { PgConnectionNotFoundError } from '@/infra/db/postgres/helpers/connection-error';
+import { PgUser } from '@/infra/db/postgres/entities';
+import {
+  PgConnection,
+  PgConnectionNotFoundError,
+  PgTransactionNotFoundError,
+} from '@/infra/db/postgres/helpers';
 
 jest.mock('typeorm', () => ({
   Entity: jest.fn(),
   PrimaryGeneratedColumn: jest.fn(),
   Column: jest.fn(),
+  CreateDateColumn: jest.fn(),
+  UpdateDateColumn: jest.fn(),
   createConnection: jest.fn(),
   getConnection: jest.fn(),
   getConnectionManager: jest.fn(),
@@ -105,5 +111,108 @@ describe('PgConnection', () => {
 
     expect(closeSpy).not.toHaveBeenCalled();
     await expect(promise).rejects.toThrow(new PgConnectionNotFoundError());
+  });
+
+  it('should open transaction', async () => {
+    await sut.connect();
+    await sut.openTransaction();
+
+    expect(startTransactionSpy).toHaveBeenCalledWith();
+    expect(startTransactionSpy).toHaveBeenCalledTimes(1);
+    expect(createQueryRunnerSpy).toHaveBeenCalledWith();
+    expect(createQueryRunnerSpy).toHaveBeenCalledTimes(1);
+
+    await sut.disconnect();
+  });
+
+  it('should return ConnectionNotFoundError on openTransaction if connection is not found', async () => {
+    const promise = sut.openTransaction();
+
+    expect(startTransactionSpy).not.toHaveBeenCalled();
+    await expect(promise).rejects.toThrow(new PgConnectionNotFoundError());
+  });
+
+  it('should close transaction', async () => {
+    await sut.connect();
+    await sut.openTransaction();
+    await sut.closeTransaction();
+
+    expect(releaseSpy).toHaveBeenCalledWith();
+    expect(releaseSpy).toHaveBeenCalledTimes(1);
+
+    await sut.disconnect();
+  });
+
+  it('should return TransactionNotFoundError on closeTransaction if queryRunner is not found', async () => {
+    const promise = sut.closeTransaction();
+
+    expect(releaseSpy).not.toHaveBeenCalled();
+    await expect(promise).rejects.toThrow(new PgTransactionNotFoundError());
+  });
+
+  it('should commit transaction', async () => {
+    await sut.connect();
+    await sut.openTransaction();
+    await sut.commit();
+
+    expect(commitTransactionSpy).toHaveBeenCalledWith();
+    expect(commitTransactionSpy).toHaveBeenCalledTimes(1);
+
+    await sut.disconnect();
+  });
+
+  it('should return TransactionNotFoundError on commit if queryRunner is not found', async () => {
+    const promise = sut.commit();
+
+    expect(commitTransactionSpy).not.toHaveBeenCalled();
+    await expect(promise).rejects.toThrow(new PgTransactionNotFoundError());
+  });
+
+  it('should rollback transaction', async () => {
+    await sut.connect();
+    await sut.openTransaction();
+    await sut.rollback();
+
+    expect(rollbackTransactionSpy).toHaveBeenCalledWith();
+    expect(rollbackTransactionSpy).toHaveBeenCalledTimes(1);
+
+    await sut.disconnect();
+  });
+
+  it('should return TransactionNotFoundError on rollback if queryRunner is not found', async () => {
+    const promise = sut.rollback();
+
+    expect(rollbackTransactionSpy).not.toHaveBeenCalled();
+    await expect(promise).rejects.toThrow(new PgTransactionNotFoundError());
+  });
+
+  it('should get repository from queryRunner', async () => {
+    await sut.connect();
+    await sut.openTransaction();
+    const repository = sut.getRepository(PgUser);
+
+    expect(getRepositorySpy).toHaveBeenCalledWith(PgUser);
+    expect(getRepositorySpy).toHaveBeenCalledTimes(1);
+    expect(repository).toBe('any_repo');
+
+    await sut.disconnect();
+  });
+
+  it('should get repository', async () => {
+    await sut.connect();
+    const repository = sut.getRepository(PgUser);
+
+    expect(getRepositorySpy).toHaveBeenCalledWith(PgUser);
+    expect(getRepositorySpy).toHaveBeenCalledTimes(1);
+    expect(repository).toBe('any_repo');
+
+    await sut.disconnect();
+  });
+
+  it('should return ConnectionNotFoundError on getRepository if connection is not found', async () => {
+    expect(getRepositorySpy).not.toHaveBeenCalled();
+    expect(() => sut.getRepository(PgUser)).toThrow(
+      new PgConnectionNotFoundError(),
+    );
   });
 });

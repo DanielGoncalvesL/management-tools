@@ -3,6 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity({ name: 'user' })
@@ -22,6 +23,6 @@ export class PgUser {
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
 
-  @CreateDateColumn({ name: 'updated_at' })
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt!: Date;
 }

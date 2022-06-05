@@ -2,9 +2,9 @@ import request from 'supertest';
 import { app } from '@/main/config/app';
 import { makeFakeDb } from '@/../tests/mocks';
 import { IBackup } from 'pg-mem';
-import { getConnection } from 'typeorm';
 import { MongoHelper } from '@/infra/db/mongo/helpers';
 import { env } from '@/main/config/env';
+import { PgConnection } from '@/infra/db/postgres/helpers';
 
 describe('SignupUser Routes', () => {
   let backup: IBackup;
@@ -19,7 +19,8 @@ describe('SignupUser Routes', () => {
 
   afterAll(async () => {
     await MongoHelper.getInstance().disconnect();
-    await getConnection().close();
+
+    await PgConnection.getInstance().disconnect();
   });
 
   beforeEach(() => {
