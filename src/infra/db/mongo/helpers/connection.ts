@@ -1,5 +1,5 @@
 import { MongoClient, Collection } from 'mongodb';
-import { MongoConnectionNotFoundError } from '@/infra/db/repositories/mongo/helpers/connection-error';
+import { MongoConnectionNotFoundError } from '@/infra/db/mongo/helpers/connection-error';
 
 export class MongoHelper {
   private static instance?: MongoHelper;

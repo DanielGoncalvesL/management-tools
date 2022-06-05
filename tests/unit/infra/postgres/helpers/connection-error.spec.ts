@@ -1,4 +1,4 @@
-import { PgConnectionNotFoundError } from '@/infra/db/repositories/postgres/helpers';
+import { PgConnectionNotFoundError } from '@/infra/db/postgres/helpers';
 
 describe('PgConnectionError', () => {
   it('should be able to return correct name and message', () => {

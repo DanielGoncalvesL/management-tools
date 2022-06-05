@@ -1,4 +1,4 @@
-import { PgConnectionNotFoundError } from '@/infra/db/repositories/postgres/helpers/connection-error';
+import { PgConnectionNotFoundError } from '@/infra/db/postgres/helpers/connection-error';
 import {
   createConnection,
   getConnection,

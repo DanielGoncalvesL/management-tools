@@ -1,5 +1,5 @@
-import { MongoHelper } from '@/infra/db/repositories/mongo/helpers';
-import { PgConnection } from '@/infra/db/repositories/postgres/helpers/connection';
+import { MongoHelper } from '@/infra/db/mongo/helpers';
+import { PgConnection } from '@/infra/db/postgres/helpers/connection';
 import { env } from '@/main/config/env';
 import { getConnection } from 'typeorm';
 

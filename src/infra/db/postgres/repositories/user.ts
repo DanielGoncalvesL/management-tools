@@ -2,8 +2,8 @@ import {
   CheckUserByEmailRepository,
   CreateUserRepository,
 } from '@/domain/contracts/repositories';
+import { PgUser } from '@/infra/db/postgres/entities';
 import { getRepository, Repository } from 'typeorm';
-import { PgUser } from './entities';
 
 type createParams = CreateUserRepository.Params;
 type createResult = CreateUserRepository.Result;

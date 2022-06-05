@@ -3,7 +3,7 @@ import { app } from '@/main/config/app';
 import { makeFakeDb } from '@/../tests/mocks';
 import { IBackup } from 'pg-mem';
 import { getConnection } from 'typeorm';
-import { MongoHelper } from '@/infra/db/repositories/mongo/helpers';
+import { MongoHelper } from '@/infra/db/mongo/helpers';
 import { env } from '@/main/config/env';
 
 describe('SignupUser Routes', () => {

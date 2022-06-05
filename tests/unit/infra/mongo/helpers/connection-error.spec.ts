@@ -1,4 +1,4 @@
-import { MongoConnectionNotFoundError } from '@/infra/db/repositories/mongo/helpers';
+import { MongoConnectionNotFoundError } from '@/infra/db/mongo/helpers';
 
 describe('MongoConnectionNotFoundError', () => {
   it('should be able to return correct name and message', () => {

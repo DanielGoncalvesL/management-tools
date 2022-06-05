@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb';
-import { MongoLoggerRepository } from '@/infra/db/repositories/mongo';
-import { MongoHelper } from '@/infra/db/repositories/mongo/helpers';
+import { MongoLoggerRepository } from '@/infra/db/mongo/repositories';
+import { MongoHelper } from '@/infra/db/mongo/helpers';
 import { env } from '@/main/config/env';
 
 describe('LogMongoRepository', () => {

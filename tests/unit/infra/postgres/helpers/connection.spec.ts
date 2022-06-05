@@ -5,8 +5,8 @@ import {
   getConnectionManager,
   getRepository,
 } from 'typeorm';
-import { PgConnection } from '@/infra/db/repositories/postgres/helpers';
-import { PgConnectionNotFoundError } from '@/infra/db/repositories/postgres/helpers/connection-error';
+import { PgConnection } from '@/infra/db/postgres/helpers';
+import { PgConnectionNotFoundError } from '@/infra/db/postgres/helpers/connection-error';
 
 jest.mock('typeorm', () => ({
   Entity: jest.fn(),

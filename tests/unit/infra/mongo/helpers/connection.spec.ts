@@ -1,7 +1,7 @@
 import {
   MongoConnectionNotFoundError,
   MongoHelper,
-} from '@/infra/db/repositories/mongo/helpers';
+} from '@/infra/db/mongo/helpers';
 import { env } from '@/main/config/env';
 import { Collection, MongoClient } from 'mongodb';
 
