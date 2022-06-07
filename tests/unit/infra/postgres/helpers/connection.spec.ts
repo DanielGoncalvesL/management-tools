@@ -1,4 +1,4 @@
-import { mocked } from 'ts-jest/utils';
+import { mocked } from 'jest-mock';
 import {
   createConnection,
   getConnection,
@@ -36,33 +36,46 @@ describe('PgConnection', () => {
   let commitTransactionSpy: jest.Mock;
   let rollbackTransactionSpy: jest.Mock;
   let getRepositorySpy: jest.Mock;
+  let queryRunnerGetRepositorySpy: jest.Mock;
   let sut: PgConnection;
 
   beforeAll(() => {
     hasSpy = jest.fn().mockReturnValue(true);
+
     getConnectionManagerSpy = jest.fn().mockReturnValue({
       has: hasSpy,
     });
+
     startTransactionSpy = jest.fn();
+
     commitTransactionSpy = jest.fn();
+
     rollbackTransactionSpy = jest.fn();
+
     releaseSpy = jest.fn();
+
     getRepositorySpy = jest.fn().mockReturnValue('any_repo');
+    queryRunnerGetRepositorySpy = jest.fn().mockReturnValue('queryRunner_repo');
+
     createQueryRunnerSpy = jest.fn().mockReturnValue({
       startTransaction: startTransactionSpy,
       commitTransaction: commitTransactionSpy,
       rollbackTransaction: rollbackTransactionSpy,
       release: releaseSpy,
-      manager: { getRepository: getRepositorySpy },
+      manager: { getRepository: queryRunnerGetRepositorySpy },
     });
+
     createConnectionSpy = jest.fn().mockResolvedValue({
       createQueryRunner: createQueryRunnerSpy,
     });
+
     closeSpy = jest.fn();
+
     getConnectionSpy = jest.fn().mockReturnValue({
       createQueryRunner: createQueryRunnerSpy,
       close: closeSpy,
     });
+
     mocked(createConnection).mockImplementation(createConnectionSpy);
     mocked(getConnectionManager).mockImplementation(getConnectionManagerSpy);
     mocked(getConnection).mockImplementation(getConnectionSpy);
@@ -191,9 +204,9 @@ describe('PgConnection', () => {
     await sut.openTransaction();
     const repository = sut.getRepository(PgUser);
 
-    expect(getRepositorySpy).toHaveBeenCalledWith(PgUser);
-    expect(getRepositorySpy).toHaveBeenCalledTimes(1);
-    expect(repository).toBe('any_repo');
+    expect(queryRunnerGetRepositorySpy).toHaveBeenCalledWith(PgUser);
+    expect(queryRunnerGetRepositorySpy).toHaveBeenCalledTimes(1);
+    expect(repository).toBe('queryRunner_repo');
 
     await sut.disconnect();
   });

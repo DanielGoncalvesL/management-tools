@@ -22,8 +22,10 @@ export class PgConnection implements DbTransaction {
   private connection?: Connection;
 
   static getInstance(): PgConnection {
-    if (PgConnection.instance === undefined)
+    if (PgConnection.instance === undefined) {
       PgConnection.instance = new PgConnection();
+    }
+
     return PgConnection.instance;
   }
 
@@ -58,6 +60,7 @@ export class PgConnection implements DbTransaction {
     if (this.query === undefined) {
       throw new PgTransactionNotFoundError();
     }
+
     await this.query.release();
   }
 
@@ -65,6 +68,7 @@ export class PgConnection implements DbTransaction {
     if (this.query === undefined) {
       throw new PgTransactionNotFoundError();
     }
+
     await this.query.commitTransaction();
   }
 
@@ -72,6 +76,7 @@ export class PgConnection implements DbTransaction {
     if (this.query === undefined) {
       throw new PgTransactionNotFoundError();
     }
+
     await this.query.rollbackTransaction();
   }
 
