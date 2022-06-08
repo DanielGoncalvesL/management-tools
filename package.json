@@ -8,7 +8,7 @@
   "scripts": {
     "start": "yarn build && node dist/main",
     "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules src/main",
-    "commit": "yarn lint-staged && git-cz",
+    "commit": "git-cz",
     "clean": "rimraf dist",
     "build": "yarn clean && tsc -p tsconfig-build.json",
     "up": "docker-compose up -d",
