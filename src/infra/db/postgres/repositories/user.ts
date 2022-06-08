@@ -1,6 +1,7 @@
 import {
   CheckUserByEmailRepository,
   CreateUserRepository,
+  LoadByEmailRepository,
 } from '@/domain/contracts/repositories';
 import { PgUser } from '@/infra/db/postgres/entities';
 import { PgRepository } from '@/infra/db/postgres/repositories/repository';
@@ -11,10 +12,31 @@ type createResult = CreateUserRepository.Result;
 type checkParams = CheckUserByEmailRepository.Params;
 type checkResult = CheckUserByEmailRepository.Result;
 
+type loadByEmailParams = LoadByEmailRepository.Params;
+type loadByEmailResult = LoadByEmailRepository.Result;
+
 export class PgUserRepository
   extends PgRepository
-  implements CheckUserByEmailRepository, CreateUserRepository
+  implements
+    CheckUserByEmailRepository,
+    CreateUserRepository,
+    LoadByEmailRepository
 {
+  async loadByEmail({ email }: loadByEmailParams): Promise<loadByEmailResult> {
+    const pgUserRepo = this.getRepository(PgUser);
+
+    const user = await pgUserRepo.findOne({ where: { email } });
+
+    if (!user) {
+      return undefined;
+    }
+
+    return {
+      id: user.id,
+      password: user.password,
+    };
+  }
+
   async createUser({
     email,
     name,

@@ -98,4 +98,40 @@ describe('PgUserRepository', () => {
       expect(typeof id).toBe('string');
     });
   });
+
+  describe('LoadByEmailRepository', () => {
+    it('should call findOne with correct params user', async () => {
+      const findOneSpy = jest.spyOn(pgUserRepo, 'findOne');
+
+      await sut.loadByEmail({ email: 'any_email' });
+
+      expect(findOneSpy).toHaveBeenCalledTimes(1);
+      expect(findOneSpy).toHaveBeenCalledWith({
+        where: { email: 'any_email' },
+      });
+    });
+
+    it('should return undefined if user not exists', async () => {
+      const user = await sut.loadByEmail({ email: 'invalid_email' });
+
+      expect(user).toBeUndefined();
+    });
+
+    it('should load user', async () => {
+      await pgUserRepo.save(
+        pgUserRepo.create({
+          name: 'any_name',
+          email: 'existing_email',
+          password: 'any_password',
+        }),
+      );
+
+      const user = await sut.loadByEmail({
+        email: 'existing_email',
+      });
+
+      expect(user).toHaveProperty('id');
+      expect(user).toHaveProperty('password', 'any_password');
+    });
+  });
 });
