@@ -62,6 +62,8 @@ export class PgConnection implements DbTransaction {
     }
 
     await this.query.release();
+
+    this.query = undefined;
   }
 
   async commit(): Promise<void> {

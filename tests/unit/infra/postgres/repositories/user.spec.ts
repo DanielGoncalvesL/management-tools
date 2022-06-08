@@ -27,7 +27,7 @@ describe('PgUserRepository', () => {
   });
 
   afterAll(async () => {
-    await connection.disconnect();
+    await PgConnection.getInstance().disconnect();
   });
 
   beforeEach(() => {
