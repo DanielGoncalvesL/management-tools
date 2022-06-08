@@ -27,3 +27,17 @@ export namespace CreateUserRepository {
 
   export type Result = { id: string };
 }
+
+export interface LoadByEmailRepository {
+  loadByEmail: (
+    params: LoadByEmailRepository.Params,
+  ) => Promise<LoadByEmailRepository.Result>;
+}
+
+export namespace LoadByEmailRepository {
+  export type Params = {
+    email: string;
+  };
+
+  export type Result = { id: string; password: string } | undefined;
+}
