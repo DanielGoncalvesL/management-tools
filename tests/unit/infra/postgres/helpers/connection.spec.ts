@@ -22,6 +22,8 @@ jest.mock('typeorm', () => ({
   getConnection: jest.fn(),
   getConnectionManager: jest.fn(),
   getRepository: jest.fn(),
+  ManyToMany: jest.fn(),
+  JoinTable: jest.fn(),
 }));
 
 describe('PgConnection', () => {
