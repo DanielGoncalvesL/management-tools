@@ -1,12 +1,13 @@
 import request from 'supertest';
-import { app } from '@/main/config/app';
-import { makeFakeDb } from '@/../tests/mocks';
 import { IBackup } from 'pg-mem';
-import { MongoHelper } from '@/infra/db/mongo/helpers';
-import { env } from '@/main/config/env';
-import { PgConnection } from '@/infra/db/postgres/helpers';
 
-describe('SignupUser Routes', () => {
+import { makeFakeDb } from '@/../tests/mocks';
+import { MongoHelper } from '@/infra/db/mongo/helpers';
+import { PgConnection } from '@/infra/db/postgres/helpers';
+import { app } from '@/main/config/app';
+import { env } from '@/main/config/env';
+
+describe('ToolRoutes', () => {
   let backup: IBackup;
 
   beforeAll(async () => {
@@ -26,34 +27,34 @@ describe('SignupUser Routes', () => {
   beforeEach(() => {
     backup.restore();
   });
-
-  describe('POST /signup', () => {
+  describe('POST /tool', () => {
     const requestData = {
-      name: 'any_name',
-      email: 'any_email@email.com',
-      password: 'any_password',
-      passwordConfirmation: 'any_password',
+      title: 'any_title',
+      link: 'any_link',
+      description: 'any_description',
+      tags: ['any_tag'],
     };
 
-    it('should return 200 with AccessToken', async () => {
+    it('should return 200 with id and createdAt', async () => {
       const { body } = await request(app)
-        .post('/api/signup')
+        .post('/api/tool')
         .send(requestData)
         .expect(200);
 
-      expect(body).toHaveProperty('accessToken');
+      expect(body).toHaveProperty('id');
+      expect(body).toHaveProperty('createdAt');
     });
 
-    it('should return 401 if email already exists', async () => {
-      await request(app).post('/api/signup').send(requestData).expect(200);
+    it('should return 400 if tool name already exists', async () => {
+      await request(app).post('/api/tool').send(requestData).expect(200);
 
       const { body } = await request(app)
-        .post('/api/signup')
+        .post('/api/tool')
         .send(requestData)
         .expect(400);
 
       expect(body).toEqual({
-        error: 'SignUp failed: Email already use',
+        error: 'Tool already use',
       });
     });
   });
