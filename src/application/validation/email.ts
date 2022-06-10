@@ -9,7 +9,7 @@ export class EmailValidator implements Validator {
   constructor(private readonly email: Field) {}
 
   validate(): Error | undefined {
-    if (!this.emailRegex.test(this.email.value)) {
+    if (!this.emailRegex.test(this.email.value.toString())) {
       return new InvalidParamError(this.email.name);
     }
 

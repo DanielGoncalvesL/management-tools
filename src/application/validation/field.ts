@@ -1,4 +1,4 @@
 export type Field = {
-  value: string;
+  value: string | any[];
   name: string;
 };
