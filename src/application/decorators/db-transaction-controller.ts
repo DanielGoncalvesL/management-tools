@@ -15,7 +15,7 @@ export class DbTransactionController extends Controller {
   async perform(httpRequest: any): Promise<HttpResponse> {
     await this.db.openTransaction();
     try {
-      const httpResponse = await this.decoratee.perform(httpRequest);
+      const httpResponse = await this.decoratee.handle(httpRequest);
 
       await this.db.commit();
 
