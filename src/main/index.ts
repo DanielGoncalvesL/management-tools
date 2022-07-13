@@ -8,12 +8,15 @@ import { makeWinstonAdapter } from '@/main/factories/infra/gateways';
 import { connectDbs } from '@/main/config/connect-dbs';
 
 import 'reflect-metadata';
+import { setupApolloServer } from './config/apollo-server';
 
 const logger = makeWinstonAdapter();
 
 connectDbs()
   .then(async () => {
     const { app } = await import('@/main/config/app');
+
+    await setupApolloServer(app);
 
     app.listen(env.port, () =>
       console.log(`Server running at http://localhost:${env.port}`),
