@@ -36,6 +36,8 @@ const setupAuthorize: Setup =
     if (!token) {
       throw new UnauthorizedError();
     }
+
+    await userRepository.checkById({ id: token.id });
   };
 
 describe('Authorize', () => {
@@ -51,7 +53,7 @@ describe('Authorize', () => {
 
     userRepository.checkById.mockResolvedValue(true);
 
-    tokenValidator.validate.mockResolvedValue({ id: 'any_token' });
+    tokenValidator.validate.mockResolvedValue({ id: 'any_id' });
 
     sut = setupAuthorize(tokenValidator, userRepository);
   });
@@ -77,5 +79,14 @@ describe('Authorize', () => {
     const promise = sut(sutData);
 
     await expect(promise).rejects.toThrow(new UnauthorizedError());
+  });
+
+  it('should call UserRepository with correct params', async () => {
+    await sut(sutData);
+
+    expect(userRepository.checkById).toHaveBeenCalledWith({
+      id: 'any_id',
+    });
+    expect(userRepository.checkById).toHaveBeenCalledTimes(1);
   });
 });
