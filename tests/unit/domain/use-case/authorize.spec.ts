@@ -1,3 +1,4 @@
+import { throwError } from '@/../tests/mocks';
 import { mock, MockProxy } from 'jest-mock-extended';
 
 export interface TokenValidator {
@@ -53,5 +54,13 @@ describe('Authorize', () => {
       token: 'any_token',
     });
     expect(tokenValidator.validate).toHaveBeenCalledTimes(1);
+  });
+
+  it('should throw if TokenValidator throws', async () => {
+    tokenValidator.validate.mockImplementationOnce(throwError);
+
+    const promise = sut({ token: 'any_token' });
+
+    await expect(promise).rejects.toThrow();
   });
 });
