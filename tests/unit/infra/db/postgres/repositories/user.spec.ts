@@ -1,14 +1,14 @@
 import { IBackup } from 'pg-mem';
 import { Repository } from 'typeorm';
-import { validate } from 'uuid';
+import { v4, validate } from 'uuid';
 
 import { PgUser } from '@/infra/db/postgres/entities';
-import { makeFakeDb } from '@/tests/mocks';
+import { PgConnection } from '@/infra/db/postgres/helpers';
 import {
   PgUserRepository,
   PgRepository,
 } from '@/infra/db/postgres/repositories';
-import { PgConnection } from '@/infra/db/postgres/helpers';
+import { makeFakeDb } from '@/tests/mocks';
 
 describe('PgUserRepository', () => {
   let sut: PgUserRepository;
@@ -132,6 +132,53 @@ describe('PgUserRepository', () => {
 
       expect(user).toHaveProperty('id');
       expect(user).toHaveProperty('password', 'any_password');
+    });
+  });
+
+  describe('CheckUserById', () => {
+    it('should call findOne with correct params', async () => {
+      const findOneSpy = jest.spyOn(pgUserRepo, 'findOne');
+
+      const uuid = v4();
+
+      await sut.checkById({ id: uuid });
+
+      expect(findOneSpy).toHaveBeenCalledTimes(1);
+      expect(findOneSpy).toHaveBeenCalledWith({
+        where: { id: uuid },
+      });
+    });
+
+    it('should return true if user exists', async () => {
+      const { id } = await pgUserRepo.save(
+        pgUserRepo.create({
+          name: 'any_name',
+          email: 'existing_email',
+          password: 'any_password',
+        }),
+      );
+
+      const isExisted = await sut.checkById({ id });
+
+      expect(isExisted).toBeTruthy();
+
+      const user = await pgUserRepo.find();
+
+      expect(user).toHaveLength(1);
+      expect(user[0]).toHaveProperty('id');
+      expect(validate(user[0].id)).toBeTruthy();
+      expect(typeof user[0].id).toBe('string');
+      expect(user[0]).toHaveProperty('name', 'any_name');
+      expect(user[0]).toHaveProperty('email', 'existing_email');
+      expect(user[0]).toHaveProperty('password', 'any_password');
+      expect(user[0]).toHaveProperty('createdAt');
+      expect(user[0]).toHaveProperty('updatedAt');
+    });
+
+    it('should return false if user not exists', async () => {
+      const isExisted = await sut.checkById({ id: v4() });
+
+      expect(isExisted).toBeFalsy();
     });
   });
 });

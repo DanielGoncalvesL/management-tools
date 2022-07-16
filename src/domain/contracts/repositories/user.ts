@@ -43,7 +43,7 @@ export namespace LoadByEmailRepository {
 }
 
 export interface CheckUserById {
-  checkById(id: CheckUserById.Params): Promise<CheckUserById.Result>;
+  checkById(params: CheckUserById.Params): Promise<CheckUserById.Result>;
 }
 
 export namespace CheckUserById {

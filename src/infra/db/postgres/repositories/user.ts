@@ -1,5 +1,6 @@
 import {
   CheckUserByEmailRepository,
+  CheckUserById,
   CreateUserRepository,
   LoadByEmailRepository,
 } from '@/domain/contracts/repositories';
@@ -20,8 +21,17 @@ export class PgUserRepository
   implements
     CheckUserByEmailRepository,
     CreateUserRepository,
-    LoadByEmailRepository
+    LoadByEmailRepository,
+    CheckUserById
 {
+  async checkById({ id }: CheckUserById.Params): Promise<boolean> {
+    const pgUserRepo = this.getRepository(PgUser);
+
+    const isExisted = await pgUserRepo.findOne({ where: { id } });
+
+    return !!isExisted;
+  }
+
   async loadByEmail({ email }: loadByEmailParams): Promise<loadByEmailResult> {
     const pgUserRepo = this.getRepository(PgUser);
 
