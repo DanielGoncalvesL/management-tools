@@ -18,7 +18,7 @@ describe('Authorize', () => {
 
     userRepository.checkById.mockResolvedValue(true);
 
-    tokenValidator.validate.mockResolvedValue({ id: 'any_id' });
+    tokenValidator.decrypt.mockResolvedValue({ key: 'any_id' });
 
     sut = setupAuthorize(tokenValidator, userRepository);
   });
@@ -26,12 +26,12 @@ describe('Authorize', () => {
   it('should call TokenValidator with correct params', async () => {
     await sut(sutData);
 
-    expect(tokenValidator.validate).toHaveBeenCalledWith(sutData);
-    expect(tokenValidator.validate).toHaveBeenCalledTimes(1);
+    expect(tokenValidator.decrypt).toHaveBeenCalledWith(sutData);
+    expect(tokenValidator.decrypt).toHaveBeenCalledTimes(1);
   });
 
   it('should throw if TokenValidator throws', async () => {
-    tokenValidator.validate.mockImplementationOnce(throwError);
+    tokenValidator.decrypt.mockImplementationOnce(throwError);
 
     const promise = sut(sutData);
 
@@ -39,7 +39,7 @@ describe('Authorize', () => {
   });
 
   it('should throw if TokenValidator returns false', async () => {
-    tokenValidator.validate.mockResolvedValueOnce(false);
+    tokenValidator.decrypt.mockResolvedValueOnce(false);
 
     const promise = sut(sutData);
 
@@ -71,9 +71,9 @@ describe('Authorize', () => {
     await expect(promise).rejects.toThrow(new UnauthorizedError());
   });
 
-  it('should return true if UserRepository returns true', async () => {
+  it('should return id if UserRepository returns true', async () => {
     const checkUserByIdResult = await sut(sutData);
 
-    expect(checkUserByIdResult).toBeTruthy();
+    expect(checkUserByIdResult).toEqual({ id: 'any_id' });
   });
 });

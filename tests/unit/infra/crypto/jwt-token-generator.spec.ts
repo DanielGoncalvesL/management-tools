@@ -19,31 +19,58 @@ describe('JwtTokenGenerator', () => {
     fakeJwt = jwt as jest.Mocked<typeof jwt>;
 
     fakeJwt.sign.mockImplementation(() => 'any_token');
+    fakeJwt.verify.mockImplementation(() => {
+      return { key: 'decoded_key' };
+    });
   });
 
   beforeEach(() => {
     sut = new JwtTokenGenerator(secret);
   });
 
-  it('should call sign with correct params', async () => {
-    await sut.generateToken(generatedTokenData);
+  describe('generateToken', () => {
+    it('should call sign with correct params', async () => {
+      await sut.generateToken(generatedTokenData);
 
-    expect(fakeJwt.sign).toHaveBeenCalledWith({ key: 'any_key' }, secret, {
-      expiresIn: 1,
+      expect(fakeJwt.sign).toHaveBeenCalledWith({ key: 'any_key' }, secret, {
+        expiresIn: 1,
+      });
+    });
+
+    it('should return a token', async () => {
+      const token = await sut.generateToken(generatedTokenData);
+
+      expect(token).toBe('any_token');
+    });
+
+    it('should throw if sign throws', async () => {
+      fakeJwt.sign.mockImplementationOnce(throwError);
+
+      const promise = sut.generateToken(generatedTokenData);
+
+      await expect(promise).rejects.toThrow();
     });
   });
 
-  it('should return a token', async () => {
-    const token = await sut.generateToken(generatedTokenData);
+  describe('generateToken', () => {
+    it('should call verify with correct params', async () => {
+      await sut.decrypt({ token: 'any_token' });
 
-    expect(token).toBe('any_token');
-  });
+      expect(fakeJwt.verify).toHaveBeenCalledWith('any_token', secret);
+    });
 
-  it('should throw if sign throws', async () => {
-    fakeJwt.sign.mockImplementationOnce(throwError);
+    it('should return a key', async () => {
+      const token = await sut.decrypt({ token: 'any_token' });
 
-    const promise = sut.generateToken(generatedTokenData);
+      expect(token).toEqual({ key: 'decoded_key' });
+    });
 
-    await expect(promise).rejects.toThrow();
+    it('should return false if verify throws', async () => {
+      fakeJwt.verify.mockImplementationOnce(throwError);
+
+      const token = await sut.decrypt({ token: 'any_token' });
+
+      expect(token).toBeFalsy();
+    });
   });
 });

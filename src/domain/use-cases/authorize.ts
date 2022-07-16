@@ -7,17 +7,20 @@ type Setup = (
   userRepository: CheckUserById,
 ) => Authorize;
 
-export type Authorize = (params: { token: string }) => Promise<boolean>;
+type Input = { token: string };
+type OutPut = { id: string };
+
+export type Authorize = (params: Input) => Promise<OutPut>;
 
 export const setupAuthorize: Setup =
   (tokenValidator, userRepository) => async params => {
-    const token = await tokenValidator.validate(params);
+    const token = await tokenValidator.decrypt(params);
 
     if (token) {
-      const isExisted = await userRepository.checkById({ id: token.id });
+      const isExisted = await userRepository.checkById({ id: token.key });
 
       if (isExisted) {
-        return true;
+        return { id: token.key };
       }
     }
 
