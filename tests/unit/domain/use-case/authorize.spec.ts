@@ -89,4 +89,12 @@ describe('Authorize', () => {
     });
     expect(userRepository.checkById).toHaveBeenCalledTimes(1);
   });
+
+  it('should throw if UserRepository throws', async () => {
+    userRepository.checkById.mockImplementationOnce(throwError);
+
+    const promise = sut(sutData);
+
+    await expect(promise).rejects.toThrow();
+  });
 });
