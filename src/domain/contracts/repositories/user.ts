@@ -41,3 +41,13 @@ export namespace LoadByEmailRepository {
 
   export type Result = { id: string; password: string } | undefined;
 }
+
+export interface CheckUserById {
+  checkById(id: CheckUserById.Params): Promise<CheckUserById.Result>;
+}
+
+export namespace CheckUserById {
+  export type Params = { id: string };
+
+  export type Result = boolean;
+}

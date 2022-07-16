@@ -1,44 +1,9 @@
 import { throwError } from '@/../tests/mocks';
 import { UnauthorizedError } from '@/application/errors';
+import { TokenValidator } from '@/domain/contracts/providers';
+import { CheckUserById } from '@/domain/contracts/repositories';
+import { Authorize, setupAuthorize } from '@/domain/use-cases';
 import { mock, MockProxy } from 'jest-mock-extended';
-
-export interface TokenValidator {
-  validate(token: TokenValidator.Params): Promise<TokenValidator.Result>;
-}
-
-export namespace TokenValidator {
-  export type Params = { token: string };
-
-  export type Result = { id: string } | false;
-}
-
-export interface CheckUserById {
-  checkById(id: CheckUserById.Params): Promise<CheckUserById.Result>;
-}
-
-export namespace CheckUserById {
-  export type Params = { id: string };
-
-  export type Result = boolean;
-}
-
-type Setup = (
-  tokenValidator: TokenValidator,
-  userRepository: CheckUserById,
-) => Authorize;
-
-type Authorize = (params: { token: string }) => Promise<void>;
-
-const setupAuthorize: Setup =
-  (tokenValidator, userRepository) => async params => {
-    const token = await tokenValidator.validate(params);
-
-    if (!token) {
-      throw new UnauthorizedError();
-    }
-
-    await userRepository.checkById({ id: token.id });
-  };
 
 describe('Authorize', () => {
   let userRepository: MockProxy<CheckUserById>;
@@ -96,5 +61,19 @@ describe('Authorize', () => {
     const promise = sut(sutData);
 
     await expect(promise).rejects.toThrow();
+  });
+
+  it('should throw if UserRepository returns false', async () => {
+    userRepository.checkById.mockResolvedValueOnce(false);
+
+    const promise = sut(sutData);
+
+    await expect(promise).rejects.toThrow(new UnauthorizedError());
+  });
+
+  it('should return true if UserRepository returns true', async () => {
+    const checkUserByIdResult = await sut(sutData);
+
+    expect(checkUserByIdResult).toBeTruthy();
   });
 });
